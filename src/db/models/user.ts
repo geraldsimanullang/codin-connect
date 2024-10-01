@@ -1,6 +1,6 @@
 import { Db, ObjectId } from "mongodb";
 import { getMongoClientInstance } from "../config";
-import { hashPassword } from "../utils/bcrypt";
+import { comparePasswordWithHash, hashPassword } from "../utils/bcrypt";
 
 export type UserModel = {
   _id: ObjectId;
@@ -34,3 +34,34 @@ export const doRegister = async (user: RegisterInput) => {
   return result;
   
 };
+
+export const getUserByEmail = async (email: string) => {
+  const db = await getDb()
+  const user = (await db.collection(COLLECTION_NAME).findOne({email: email})) as UserModel
+
+  return user
+}
+
+export const getUserByUsername = async (username: string) => {
+  const db = await getDb()
+  const user = (await db.collection(COLLECTION_NAME).findOne({username: username})) as UserModel
+
+  return user
+}
+
+export const doLogin = async (usernameOrEmail: string, password: string) => {
+ 
+  const user =
+    usernameOrEmail.includes("@")
+      ? await getUserByEmail(usernameOrEmail)
+      : await getUserByUsername(usernameOrEmail);
+
+  if (!user) {
+    return null; 
+  }
+
+  
+  const isPasswordValid = comparePasswordWithHash(password, user.password);
+  return isPasswordValid ? user : null; 
+};
+
