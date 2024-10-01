@@ -65,3 +65,14 @@ export const doLogin = async (usernameOrEmail: string, password: string) => {
   return isPasswordValid ? user : null; 
 };
 
+
+export const getProfileById = async(_id: string) => {
+  const db = await getDb()
+  const objectId = new ObjectId(_id)
+
+  const user = (await db.collection(COLLECTION_NAME).findOne({_id:objectId}, {projection: { password: 0 }})) as UserModel
+
+  return user
+}
+
+
