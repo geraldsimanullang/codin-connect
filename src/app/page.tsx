@@ -4,15 +4,18 @@ import Navbar from "@/components/main/Navbar";
 import StarsCanvas from "@/components/main/StarBackground";
 import UlasanContent from "@/components/sub/UlasanContent";
 
+import Profile from "./profile/profile";
+
 export default function Home() {
   return (
     <div className="h-full w-full">
-      <StarsCanvas />
+      {/* <StarsCanvas /> */}
       <div className="flex flex-col gap-56">
-        <Navbar />
+        {/* <Navbar />
         <Hero />
         <UlasanContent />
-        <Footer />
+        <Footer /> */}
+        <Profile />
       </div>
     </div>
   );
