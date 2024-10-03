@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { executeCode } from "./api";
 import * as monaco from "monaco-editor";
+import { TestCaseModel } from "@/db/models/challenge";
 
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
   language: string;
+  functionName: string;
+  testCases: TestCaseModel[];
 }
 
-const Output: React.FC<OutputProps> = ({ editorRef, language }) => {
+interface TestCase {
+  input: string;
+  expectedOutput: string;
+}
+
+const Output: React.FC<OutputProps> = ({
+  editorRef,
+  language,
+  functionName,
+  testCases,
+}) => {
   const [output, setOutput] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -19,13 +32,46 @@ const Output: React.FC<OutputProps> = ({ editorRef, language }) => {
 
     try {
       setIsLoading(true);
-      console.log(sourceCode);
-      const { run: result } = await executeCode(language, sourceCode);
-      setOutput(result.output.split("\n"));
-      setIsError(!!result.stderr);
+      let finalResults: string[] = [];
+
+      for (let i = 0; i < testCases.length; i++) {
+        const { input, expectedOutput } = testCases[i];
+
+        let finalCode: string = "";
+
+        if (language === "javascript") {
+          finalCode = `
+            ${sourceCode}
+            console.log(${functionName}(${input})); 
+          `;
+        }
+
+        if (language === "python") {
+          finalCode = `${sourceCode}\nprint(${functionName}(${input}));`;
+        }
+
+        const { run: result } = await executeCode(language, finalCode);
+
+        if (result.output.trim() == expectedOutput) {
+          finalResults.push(
+            `Test case ${
+              i + 1
+            } passed: got ${result.output.trim()}, expected ${expectedOutput}`
+          );
+        } else {
+          finalResults.push(
+            `Test case ${
+              i + 1
+            } failed: got ${result.output.trim()}, expected ${expectedOutput}`
+          );
+        }
+      }
+
+      setOutput(finalResults);
+      setIsError(false);
     } catch (error: any) {
       console.log(error);
-      alert(error.message || "Unable to run code"); // menggunakan alert sebagai pengganti toast
+      alert(error.message || "Unable to run code");
     } finally {
       setIsLoading(false);
     }
@@ -43,10 +89,10 @@ const Output: React.FC<OutputProps> = ({ editorRef, language }) => {
         onClick={runCode}
         disabled={isLoading}
       >
-        {isLoading ? "Running..." : "Run Code"}
+        {isLoading ? "Attempting..." : "Attempt"}
       </button>
       <div
-        className={`h-3/4 p-2 border rounded-md ${
+        className={`h-1/2 p-2 w-full border rounded-md ${
           isError ? "border-red-500 text-red-400" : "border-gray-700"
         }`}
       >
