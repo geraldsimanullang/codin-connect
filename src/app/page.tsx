@@ -3,8 +3,9 @@ import Hero from "@/components/main/Hero";
 import Navbar from "@/components/main/Navbar";
 import StarsCanvas from "@/components/main/StarBackground";
 import UlasanContent from "@/components/sub/UlasanContent";
-
+import Dashboard from "./dashboard/page";
 import Profile from "./profile/profile";
+import CodeEditorPage from "./sandbox/page";
 
 export default function Home() {
   return (
@@ -15,7 +16,10 @@ export default function Home() {
         <Hero />
         <UlasanContent />
         <Footer /> */}
-        <Profile />
+        {/* <Dashboard /> */}
+        {/* <Profile /> */}
+        {/* <Dashboard /> */}
+        <CodeEditorPage />
       </div>
     </div>
   );

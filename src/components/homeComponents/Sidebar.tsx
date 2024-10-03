@@ -70,7 +70,7 @@ const Sidebar = () => {
               />
               <h1 className="font-medium text-gray-700 truncate">
                 <Typewriter
-                  words={["Reiza Akbar wildani"]}
+                  words={["Reiza Akbar"]}
                   loop={false}
                   delaySpeed={5000}
                 />
