@@ -8,8 +8,6 @@ export type UserModel = {
   username: string;
   email: string;
   password: string;
-  following: object[];
-  followers: object[];
 };
 
 export type RegisterInput = Omit<UserModel, "_id">;
@@ -71,26 +69,39 @@ export const getProfileById = async (_id: string) => {
   const db = await getDb();
   const objectId = new ObjectId(_id);
 
-  const user = (await db
-    .collection(COLLECTION_NAME)
-    .findOne({ _id: objectId }, { projection: { password: 0 } })) as UserModel;
+  const pipeline = [
+    { $match: { _id: objectId } },
+    {
+      $lookup: {
+        from: "Follows",
+        localField: "_id",
+        foreignField: "userId",
+        as: "followsData",
+      },
+    },
 
-  return user;
-};
+    { $unwind: { path: "$followsData", preserveNullAndEmptyArrays: true } },
 
-export const followUSer = async (userId: string, followersId: string) => {
-  const db = await getDb();
-  await db
-    .collection(COLLECTION_NAME)
-    .updateOne(
-      { _id: new ObjectId() },
-      { $addToSet: { followers: new ObjectId(userId) } }
-    );
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        email: 1,
+        username: 1,
+        followers: "$followsData.followers",
+        following: "$followsData.following",
+      },
+    },
+  ];
 
-  await db
+  const user = await db
     .collection(COLLECTION_NAME)
-    .updateOne(
-      { _id: new ObjectId() },
-      { $addToSet: { following: new ObjectId(followersId) } }
-    );
+    .aggregate(pipeline)
+    .toArray();
+
+  if (!user || user.length === 0) {
+    return null;
+  }
+
+  return user[0];
 };

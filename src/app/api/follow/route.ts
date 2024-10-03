@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { followUSer } from "@/db/models/user";
+import { followUSer } from "@/db/models/follow";
 import { readPayload } from "@/lib/jwt";
 
 export async function POST(request: Request) {
