@@ -19,7 +19,6 @@ export default function Home() {
         <Dashboard />
         {/* <Profile /> */}
         {/* <Dashboard /> */}
-        <CodeEditorPage />
       </div>
     </div>
   );
