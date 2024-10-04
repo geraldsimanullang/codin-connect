@@ -8,7 +8,7 @@ export default function Login() {
           {/* Bagian kiri: Form Register */}
           <div className="w-1/2 p-6">
             <div className="text-gray-900">
-              <h2 className="text-center text-3xl font-semibold mb-6 text-[#535C91]">Login to your Account</h2>
+              <h2 className="text-center text-3xl font-semibold mb-6 text-[#004aad]">Login to your Account</h2>
               <form className="space-y-4" >
                 <div>
                   <label
@@ -44,14 +44,14 @@ export default function Login() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-[#535C91] text-white rounded-md hover:bg-[#3f497d] transition-colors duration-300"
+                  className="w-full py-2 bg-[#004aad] text-white rounded-md hover:bg-[#3f497d] transition-colors duration-300"
                 >
                   Login
                 </button>
               </form>
               <p className="text-center mt-6 text-gray-600">
                 Dont have an account?{" "}
-                <Link href="/register" className="text-[#535C91] hover:underline hover:text-[#3f497d] transition-colors duration-300">
+                <Link href="/register" className="text-[#004aad] hover:underline hover:text-[#004aad] transition-colors duration-300">
                 {" "}Register?
                 </Link>
               </p>

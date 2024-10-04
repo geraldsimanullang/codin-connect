@@ -10,12 +10,15 @@ import CodeEditorPage from "./sandbox/page";
 export default function Home() {
   return (
     <div className="h-full w-full">
-      {/* <StarsCanvas /> */}
+      <StarsCanvas />
       <div className="flex flex-col gap-56">
         {/* <Navbar />
         <Hero />
         <UlasanContent />
         <Footer /> */}
+        <Dashboard />
+        {/* <Profile /> */}
+        {/* <Dashboard /> */}
       </div>
     </div>
   );
