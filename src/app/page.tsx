@@ -12,11 +12,11 @@ export default function Home() {
     <div className="h-full w-full">
       <StarsCanvas />
       <div className="flex flex-col gap-56">
-        {/* <Navbar />
+        <Navbar />
         <Hero />
         <UlasanContent />
-        <Footer /> */}
-        <Dashboard />
+        <Footer />
+        {/* <Dashboard /> */}
         {/* <Profile /> */}
         {/* <Dashboard /> */}
       </div>
