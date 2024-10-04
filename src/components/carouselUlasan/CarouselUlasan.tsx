@@ -1,13 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/effect-cube";
 import "swiper/css/controller";
 import styles from "./carousel2.module.css";
-
 import {
   EffectFade,
   EffectCube,
@@ -24,6 +22,7 @@ export default function UlasanCarousel() {
   return (
     <>
       <div className={styles.section}>
+        {/* Slider teks berisi nama, peran, dan deskripsi */}
         <Swiper
           modules={[EffectFade, Controller, Mousewheel, Autoplay]}
           onSwiper={setTextSlider}
@@ -39,74 +38,64 @@ export default function UlasanCarousel() {
           className={styles.textSlider}
         >
           <SwiperSlide className={styles.swiperSlide}>
-            <h1 className={styles.h1}>
-              Monster Energy Yamaha MotoGP Team Polo
-            </h1>
+            <h1 className={styles.h1}>Gerald Simanullang - Project Leader</h1>
             <p className={styles.p1}>
-              Whether you're trackside or hitting the streets in style you can
-              easily carry your passion for MotoGP™ and the Monster Energy
-              Yamaha team with the official replica teamwear range. The team
-              polo features a quarter zip closure at the neck allowing you to
-              adjust it as you need, along with a polo-style collar featuring
-              team and sponsor branding. A team patch on the chest and graphic
-              details on the chest, back and sleeves add genuine MotoGP™ style.
+              Gerald is the project leader. He is responsible for team
+              coordination and strategic decision making.
             </p>
             <p className={styles.p1}>
-              This item will ship within 6 business days. Please proceed to
-              checkout for shipping options and additional transit times.
+              Gerald ensures the project runs according to plan and on time.
             </p>
-            <p className={styles.p1}>#SemakinDiDepan</p>
           </SwiperSlide>
+
           <SwiperSlide className={styles.swiperSlide}>
             <h1 className={styles.h2}>
-              Repsol Honda 2024 Team Rider Polo - Red
+              Muhammad Dicky Taruna - Lead Developer
             </h1>
             <p className={styles.p2}>
-              Stand out from the crowd in this Honda Repsol Marc Marquez polo
-              shirt a unique design crafted exclusively for our Repsol Honda
-              Replica racing collection. Precision-engineered with a self-fabric
-              collar and concealed button placket for adjustability, this polo
-              elevates any trackside ensemble, while its abstract screen-printed
-              graphic ensures you never blend in.
+              Dicky is a developer who works on system architecture and
+              implementation of key features.
             </p>
             <p className={styles.p2}>
-              This item will ship within 1 business day. Please proceed to
-              checkout for shipping options and additional transit times.
+              He is a development team and does code reviews.
             </p>
-            <p className={styles.p2}>#RepsolHondaTeam</p>
           </SwiperSlide>
+
           <SwiperSlide className={styles.swiperSlide}>
-            <h1 className={styles.h3}>
-              VR46 Racing Valentino Rossi x Monster Poly T-Shirt.
-            </h1>
+            <h1 className={styles.h3}>Reiza Akbar - UI/UX Designer</h1>
             <p className={styles.p3}>
-              Stay cool and comfortable in the heat with these MotoGP™ shorts.
-              The racing style means you'll feel ready for anything when the
-              heat is turned up!.
+              Reiza designs the user interface and ensures optimal user
+              experience.
             </p>
             <p className={styles.p3}>
-              This item will ship within 1 business day. Please proceed to
-              checkout for shipping options and additional transit times.
+              His creative design provides a modern and intuitive look.
             </p>
-            <p className={styles.p3}>#VR46</p>
           </SwiperSlide>
+
           <SwiperSlide className={styles.swiperSlide}>
-            <h1 className={styles.h4}>
-              Ducati Lenovo Team 2024 Francesco Bagnaia T-Shirt - Kids
-            </h1>
+            <h1 className={styles.h3}>ST Fatimah Zahrah - UI/UX Designer</h1>
+            <p className={styles.p3}>
+              Zahrah designs the user interface and ensures optimal user
+              experience.
+            </p>
+            <p className={styles.p3}>
+              Her creative design provides a modern and intuitive look.
+            </p>
+          </SwiperSlide>
+
+          <SwiperSlide className={styles.swiperSlide}>
+            <h1 className={styles.h4}>Fajri Prawira - Quality Assurance</h1>
             <p className={styles.p4}>
-              Take an essential garment and give it a real MotoGP™ flourish. No
-              item of clothing is likely to accompany you as far and wide as a
-              classic tee, so make sure yours reflects your passion and makes
-              you look good.
+              Fajri is responsible for testing the quality and performance of
+              the application, ensuring everything runs smoothly.
             </p>
             <p className={styles.p4}>
-              This item will ship within 1 business day. Please proceed to
-              checkout for shipping options and additional transit times.
+              He makes sure no bugs are missed before release.
             </p>
-            <p className={styles.p4}>#DucatiLenovo</p>
           </SwiperSlide>
         </Swiper>
+
+        {/* Slider gambar berisi foto anggota tim */}
         <Swiper
           modules={[EffectCube, Controller, Mousewheel]}
           onSwiper={setCubeSlider}
@@ -138,29 +127,36 @@ export default function UlasanCarousel() {
         >
           <SwiperSlide>
             <img
-              src="https://raw.githubusercontent.com/sandhikagalih/portfolio-tailwind-css/main/dist/img/sandhika.png"
-              alt=""
+              src="https://i.pinimg.com/474x/fb/a5/81/fba5817a4e71c9381fc3ab5895b330cc.jpg"
+              alt="Gerald"
               className={styles.img}
             />
           </SwiperSlide>
           <SwiperSlide>
             <img
-              src="https://rizafahmi.github.io/assets/img/avatar_riza.jpg"
-              alt=""
+              src="https://i.pinimg.com/474x/bc/61/35/bc61356eb64b6aa114dabca6550950d0.jpg"
+              alt="Dicky"
               className={styles.img}
             />
           </SwiperSlide>
           <SwiperSlide>
             <img
-              src="https://images.footballfanatics.com/vr46-racing/vr46-racing-valentino-rossi-x-monster-poly-t-shirt_ss5_p-201140739+pv-2+u-fajltldflqd0p53fs13i+v-wv2lv8ycglfdripd3pn9.jpg?_hv=2&w=900"
-              alt=""
+              src="https://i.pinimg.com/474x/5e/f8/1d/5ef81d26d06f1dd9016e77a6cc94d85d.jpg"
+              alt="Reiza"
               className={styles.img}
             />
           </SwiperSlide>
           <SwiperSlide>
             <img
-              src="https://images.footballfanatics.com/ducati-lenovo/ducati-lenovo-team-2024-francesco-bagnaia-t-shirt-kids_ss5_p-201082750+pv-2+u-xcbpjemr0g8aybfyxw9l+v-6wg48yw3xtfzafrqm18t.jpg?_hv=2&w=900"
-              alt=""
+              src="https://i.pinimg.com/474x/46/dd/e8/46dde814ae7a42f29166691d2b45e7e9.jpg"
+              alt="Zahrah"
+              className={styles.img}
+            />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img
+              src="https://i.pinimg.com/474x/44/df/8c/44df8cbaf3f31b4ee4210b7fcb051514.jpg"
+              alt="Fajri"
               className={styles.img}
             />
           </SwiperSlide>
