@@ -1,53 +1,27 @@
 // import { Socials } from "@/constants";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div className="w-full h-[65px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001417] backdrop-blur-md z-50 px-10">
+    <div className="w-full h-[65px] fixed top-0  bg-white backdrop-blur-md z-50 shadow-md">
       <div className="w-full h-full flex flex-row items-center justify-between m-auto px-[10px]">
-        <a
-          href="#about-me"
-          className="h-auto w-auto flex flex-row items-center"
-        >
-          {/* <Image
-            src="/NavLogo.png"
-            alt="logo"
-            width={70}
-            height={70}
-            className="cursor-pointer hover:animate-slowspin"
-          /> */}
-
-          <span className="font-bold ml-[10px] hidden md:block text-gray-600">
-            Codin-Connect
-          </span>
-        </a>
+        <img src="/logo.jpg" alt="logo" className="h-12 w-12 object-contain" />
 
         <div className="w-[500px] h-full flex flex-row items-center justify-end md:mr-20">
-          <div className="flex items-center justify-between w-full h-auto border border-[#7042f861] bg-[#0300145e] mr-[15px] px-[20px] py-[10px] rounded-full text-gray-200">
-            <a href="#about-me" className="cursor-pointer">
+            <Link href="/about-me" className="cursor-pointer text-gray-800 mx-5 my-5 font-semibold bg-gray-100 rounded-full px-4 py-2">
               About me
-            </a>
-            <a href="#skills" className="cursor-pointer">
+            </Link>
+            <Link href="/"  className="cursor-pointer text-gray-800 mx-5 my-5 font-semibold bg-gray-100 rounded-full px-4 py-2">
               Home
-            </a>
-            <a href="#projects" className="cursor-pointer">
-              Login
-            </a>
-          </div>
-        </div>
+            </Link>
+            <Link href="/contact"  className="cursor-pointer text-gray-800 mx-5 my-5 font-semibold bg-gray-100 rounded-full px-4 py-2">
+              Contact
+            </Link>
 
-        {/* <div className="flex flex-row gap-5"> */}
-        {/* {Socials.map((social) => (
-            <Image
-              src={social.src}
-              alt={social.name}
-              key={social.name}
-              width={24}
-              height={24}
-            />
-          ))} */}
-        {/* </div> */}
+          </div>
+
       </div>
     </div>
   );
