@@ -8,6 +8,8 @@ import * as monaco from "monaco-editor";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ChallengeModel } from "@/db/models/challenge";
+import Navbar from "@/components/homeComponents/Navbar";
+import Image from "next/image";
 
 export default function Solve() {
   const { id }: { id: string } = useParams();
@@ -53,46 +55,75 @@ export default function Solve() {
   }, []);
 
   return (
-    <div className="flex min-h-screen min-w-screen">
-      <div className="min-h-screen w-1/2">
-        <p>{challenge?.title}</p>
-        <p>{challenge?.description}</p>
-        <p>Test cases:</p>
-        {challenge?.testCases &&
-          challenge.testCases.map((testCase) => {
-            return (
-              <>
-                <p>Input: {testCase.input}</p>
-                <p>Expected output: {testCase.expectedOutput}</p>
-              </>
-            );
-          })}
-      </div>
-      {challenge && (
-        <div className="min-h-screen w-1/2">
-          <LanguageSelector language={language} onSelect={onSelect} />
-          <Editor
-            options={{
-              minimap: {
-                enabled: false,
-              },
-            }}
-            height="50%"
-            theme="vs-light"
-            language={language}
-            defaultValue={value}
-            onMount={onMount}
-            value={value}
-            onChange={(newValue) => setValue(newValue || "")}
+    <>
+      {challenge ? (
+        <div className="flex flex-col min-h-screen min-w-screen">
+          <Navbar />
+          <div className="flex min-h-screen min-w-screen">
+            {/* Challenge Description Section */}
+            <div className="min-h-screen w-1/2 p-8 bg-gray-100">
+              <h1 className="text-3xl font-bold mb-4">{challenge?.title}</h1>
+              <p className="text-lg mb-6">{challenge?.description}</p>
+              <h2 className="text-xl font-semibold mb-2">Test Cases:</h2>
+              <div className="space-y-4">
+                {challenge?.testCases?.map((testCase, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-white shadow rounded-md border border-gray-200"
+                  >
+                    <p className="font-medium">
+                      <span className="text-gray-500">Input:</span>{" "}
+                      {testCase.input}
+                    </p>
+                    <p className="font-medium">
+                      <span className="text-gray-500">Expected Output:</span>{" "}
+                      {testCase.expectedOutput}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Code Editor and Output Section */}
+            <div className="min-h-screen w-1/2 p-8 bg-gray-50 flex flex-col">
+              <LanguageSelector language={language} onSelect={onSelect} />
+              <div className="flex-grow mt-4 mb-6">
+                <Editor
+                  options={{
+                    minimap: {
+                      enabled: false,
+                    },
+                  }}
+                  height="100%"
+                  theme="vs-light"
+                  language={language}
+                  defaultValue={value}
+                  onMount={onMount}
+                  value={value}
+                  onChange={(newValue) => setValue(newValue || "")}
+                />
+              </div>
+              <Output
+                editorRef={editorRef}
+                language={language}
+                functionName={challenge.functionName}
+                testCases={challenge.testCases}
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center min-h-screen flex-col">
+          <Image
+            src="/loading.svg"
+            alt=""
+            width={100}
+            height={0}
+            style={{ height: "auto" }}
           />
-          <Output
-            editorRef={editorRef}
-            language={language}
-            functionName={challenge.functionName}
-            testCases={challenge.testCases}
-          />
+          <p className=" font-semibold text-gray-700">Loading challenge...</p>
         </div>
       )}
-    </div>
+    </>
   );
 }
