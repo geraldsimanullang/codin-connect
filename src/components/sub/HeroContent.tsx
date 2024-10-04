@@ -31,16 +31,15 @@ const HeroContent = () => {
           variants={slideInFromLeft(0.8)}
           className="text-lg text-black my-5 max-w-[600px]"
         >
-          We help companies develop the strongest tech teams around. We help
-          candidates sharpen their tech skills and pursue job opportunities.
+          Create and solve programming challenge with your friends.
         </motion.p>
         <Link href="/login">
-          <motion.a
+          <motion.i
             variants={slideInFromLeft(1)}
             className="py-2 bg-blue-500 text-center text-white cursor-pointer rounded-lg max-w-[200px] px-5"
           >
-            Sign In
-          </motion.a>
+            Join Now
+          </motion.i>
         </Link>
       </div>
 
