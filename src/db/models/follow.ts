@@ -3,9 +3,10 @@ import { getMongoClientInstance } from "../config";
 
 export type FollowModel = {
   _id: ObjectId;
-  userId: ObjectId;
-  following: ObjectId[];
-  followers: ObjectId[];
+  followingId: ObjectId;
+  followerId: ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 const DATABASE_NAME = process.env.DATABASE_NAME;
@@ -17,39 +18,51 @@ export const getDb = async () => {
   return db;
 };
 
-export const followUSer = async (userId: string, followersId: string) => {
+export const followUser = async (followerId: string, followingId: string) => {
   const db = await getDb();
-  await db
-    .collection(COLLECTION_NAME)
-    .updateOne(
-      { userId: new ObjectId(followersId) },
-      { $addToSet: { followers: new ObjectId(userId) } },
-      { upsert: true }
-    );
 
-  await db
+  const followInput = {
+    followerId: new ObjectId(followerId),
+    followingId: new ObjectId(followingId),
+  };
+
+  const existingFollow = await db
     .collection(COLLECTION_NAME)
-    .updateOne(
-      { userId: new ObjectId(userId) },
-      { $addToSet: { following: new ObjectId(followersId) } },
-      { upsert: true }
-    );
+    .findOne(followInput);
+
+  if (existingFollow) {
+    await db.collection(COLLECTION_NAME).deleteOne(followInput);
+    return "Unfollow success";
+  } else {
+    const followData: FollowModel = {
+      _id: new ObjectId(),
+      followerId: new ObjectId(followerId),
+      followingId: new ObjectId(followingId),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await db.collection(COLLECTION_NAME).insertOne(followData);
+    return "Follow success";
+  }
 };
 
 export const getFollowers = async (userId: string) => {
   const db = await getDb();
-  const follows = await db
+  const followers = await db
     .collection(COLLECTION_NAME)
-    .findOne({ userId: new ObjectId(userId) });
+    .find({ followingId: new ObjectId(userId) })
+    .toArray();
 
-  return follows ? follows.followers : [];
+  return followers.map((follow) => follow.followerId);
 };
 
 export const getFollowing = async (userId: string) => {
   const db = await getDb();
-  const follows = await db
+  const following = await db
     .collection(COLLECTION_NAME)
-    .findOne({ userId: new ObjectId(userId) });
+    .find({ followerId: new ObjectId(userId) })
+    .toArray();
 
-  return follows ? follows.following : [];
+  return following.map((follow) => follow.followingId);
 };
