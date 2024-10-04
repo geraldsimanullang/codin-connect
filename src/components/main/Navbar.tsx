@@ -12,7 +12,7 @@ const Navbar = () => {
           src="/logo-coding-connect.png"
           alt="logo"
           height={50} // Atur tinggi logo agar sesuai dengan navbar
-          width={150} // Atur lebar logo agar sesuai dengan navbar
+          width={180} // Atur lebar logo agar sesuai dengan navbar
           className="object-contain h-full m-0 p-0" 
         />
 

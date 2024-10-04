@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { LuBadgeCheck, LuBell } from "react-icons/lu";
-import Sidebar from "@/components/homeComponents/Sidebar";
+import Sidebar from "@/components/homeComponents/HomeNavbar";
 
 const Profile = () => {
   return (

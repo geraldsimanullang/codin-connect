@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Sidebar from "@/components/homeComponents/Sidebar";
+import Sidebar from "@/components/homeComponents/HomeNavbar";
 
 const Dashboard: React.FC = () => {
   return (
