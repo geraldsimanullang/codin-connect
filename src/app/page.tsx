@@ -16,10 +16,6 @@ export default function Home() {
         <Hero />
         <UlasanContent />
         <Footer /> */}
-        {/* <Dashboard /> */}
-        {/* <Profile /> */}
-        {/* <Dashboard /> */}
-        <CodeEditorPage />
       </div>
     </div>
   );
