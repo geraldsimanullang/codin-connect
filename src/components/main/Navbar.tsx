@@ -15,16 +15,16 @@ const Navbar = () => {
           className="object-contain h-full m-0 p-0"
         />
 
-        <div className="w-[500px] h-full flex flex-row items-center justify-end md:mr-20">
+        <div className=" h-full flex flex-row items-center justify-end md:mr-8 gap-3">
           <Link
             href="login"
-            className="cursor-pointer text-gray-800 mx-5 my-5 font-semibold bg-gray-100 rounded-full px-4 py-2"
+            className="cursor-pointer text-gray-800 font-semibold bg-gray-100 rounded-full px-4 py-2"
           >
             Login
           </Link>
           <Link
             href="/register"
-            className="cursor-pointer text-white mx-5 my-5 font-semibold bg-blue-500 rounded-full px-4 py-2"
+            className="cursor-pointer text-white font-semibold bg-blue-500 rounded-full px-4 py-2"
           >
             Register
           </Link>

@@ -34,12 +34,12 @@ const HeroContent = () => {
           Create and solve programming challenge with your friends.
         </motion.p>
         <Link href="/login">
-          <motion.i
+          <motion.p
             variants={slideInFromLeft(1)}
             className="py-2 bg-blue-500 text-center text-white cursor-pointer rounded-lg max-w-[200px] px-5"
           >
             Join Now
-          </motion.i>
+          </motion.p>
         </Link>
       </div>
 
