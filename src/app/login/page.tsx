@@ -1,73 +1,76 @@
+import { Button } from "@nextui-org/react";
+
 import Link from "next/link";
-export default function Login() {
+
+import { LuLaugh } from "react-icons/lu";
+
+const Login = () => {
   return (
     <>
+      <div className="flex flex-col min-h-screen items-center justify-center">
+        <div className="bg-gray-200/50 p-10 rounded-xl">
+          <div className="relative flex flex-col gap-5 bg-white rounded-lg p-8 max-w-sm border border-black">
+            <div className="absolute -top-3 -right-3">
+              <LuLaugh className="text-5xl fill-blue-700 stroke-gray-200 rotate-45" />
+            </div>
+            <div className="flex flex-col items-center z-10">
+              <h1 className="text-4xl font-bold mb-2">Hello</h1>
+              <p className="text-gray-600 mb-6">Sign in to your account</p>
 
-      <div className="flex items-center justify-center min-h-screen bg-[#f5f7fa]">
-        <div className="flex w-[70%] bg-white shadow-lg rounded-lg p-8">
-          {/* Bagian kiri: Form Register */}
-          <div className="w-1/2 p-6">
-            <div className="text-gray-900">
-              <h2 className="text-center text-3xl font-semibold mb-6 text-[#535C91]">Login to your Account</h2>
-              <form className="space-y-4" >
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm mb-1 text-gray-700"
-                  >
-                    Email Address
-                  </label>
+              <div className="w-80 mb-4">
+                <div className="relative mb-4">
+                  <i className="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                   <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full p-2 text-sm border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#535C91] transition-all duration-300"
-                    placeholder="you@mail.com"
-                    required
+                    type="text"
+                    placeholder="Username"
+                    className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
                   />
                 </div>
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm mb-1 text-gray-700"
-                  >
-                    Password
-                  </label>
+
+                <div className="relative mb-2">
+                  <i className="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                   <input
                     type="password"
-                    id="password"
-                    name="password"
-                    className="w-full p-2 text-sm border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#535C91] transition-all duration-300"
-                    placeholder="••••••••"
-                    required
+                    placeholder="Password"
+                    className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="w-full py-2 bg-[#535C91] text-white rounded-md hover:bg-[#3f497d] transition-colors duration-300"
-                >
-                  Login
-                </button>
-              </form>
-              <p className="text-center mt-6 text-gray-600">
-                Dont have an account?{" "}
-                <Link href="/register" className="text-[#535C91] hover:underline hover:text-[#3f497d] transition-colors duration-300">
-                {" "}Register?
-                </Link>
-              </p>
+
+                <div className="text-center m-6">
+                  <div className="text-gray-400 text-sm">
+                    Don't have an account?
+                    <Link href={"/register"} className="text-blue-600">
+                      Register
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <button className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-2 px-6 rounded-full shadow-md">
+                Sign in
+              </button>
             </div>
+
+            <p className="text-xs pr-1">
+              *Dengan ini anda menyetujui ketentuan dan persyaratan yang
+              berlaku.
+            </p>
           </div>
-  
-          {/* Bagian kanan: Gambar Gift */}
-          <div className="w-1/2 flex justify-center items-center">
-            <img
-              src="https://cdn.dribbble.com/users/416610/screenshots/4801105/media/be031f8d02ca8cc404d44be54ee2c493.gif"
-              alt="Gift Animation"
-              className="w-[80%] h-auto rounded-lg shadow-lg"
-            />
-          </div>
+        </div>
+        <div className="flex flex-col text-center gap-2 items-center">
+          <h1 className="mt-5 font-medium text-sm">
+            Copyright &copy; 2024 Built by{" "}
+            <Link
+              href={"https://github.com/geraldsimanullang/codin-connect"}
+              className="font-extrabold"
+            >
+              CodinConnectDev
+            </Link>
+          </h1>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default Login;

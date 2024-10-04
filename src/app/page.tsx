@@ -6,7 +6,9 @@ import UlasanContent from "@/components/sub/UlasanContent";
 import Dashboard from "./dashboard/page";
 import Profile from "./profile/profile";
 import CodeEditorPage from "./sandbox/page";
-
+import Addquestion from "./addquestion/page";
+import Register from "./register/page";
+import LoginRegister from "./login/page";
 export default function Home() {
   return (
     <div className="h-full w-full">
@@ -16,6 +18,9 @@ export default function Home() {
         <Hero />
         <UlasanContent />
         <Footer /> */}
+        {/* <Register /> */}
+        <LoginRegister />
+        {/* <Addquestion /> */}
       </div>
     </div>
   );
