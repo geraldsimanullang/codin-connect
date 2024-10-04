@@ -78,7 +78,7 @@ const Output: React.FC<OutputProps> = ({
   };
 
   return (
-    <div className="w-full md:w-1/2 p-6 bg-white shadow-md rounded-lg border border-gray-200">
+    <div className="w-full p-6 bg-white shadow-md rounded-lg border border-gray-200">
       {/* Output Title */}
       <p className="mb-4 text-xl font-semibold text-gray-700">Output</p>
 
