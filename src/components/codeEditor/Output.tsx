@@ -78,27 +78,40 @@ const Output: React.FC<OutputProps> = ({
   };
 
   return (
-    <div className="w-1/2 p-4">
-      <p className="mb-2 text-lg">Output</p>
+    <div className="w-full md:w-1/2 p-6 bg-white shadow-md rounded-lg border border-gray-200">
+      {/* Output Title */}
+      <p className="mb-4 text-xl font-semibold text-gray-700">Output</p>
+
+      {/* Run Code Button */}
       <button
-        className={`mb-4 px-4 py-2 border rounded-md ${
+        className={`mb-6 w-full px-4 py-2 rounded-lg font-medium transition ${
           isLoading
-            ? "bg-gray-500 cursor-not-allowed"
-            : "border-[#004aad] text-[#004aad] hover:bg-[#004aad] hover:text-white"
+            ? "bg-gray-400 text-gray-100 cursor-not-allowed"
+            : "border border-[#004aad] text-[#004aad] bg-white hover:bg-[#004aad] hover:text-white"
         }`}
         onClick={runCode}
         disabled={isLoading}
       >
         {isLoading ? "Attempting..." : "Attempt"}
       </button>
+
+      {/* Output Display */}
       <div
-        className={`h-1/2 p-2 w-full border rounded-md ${
-          isError ? "border-red-500 text-red-400" : "border-gray-700"
+        className={`min-h-[150px] p-4 rounded-lg overflow-auto transition border ${
+          isError
+            ? "border-red-500 bg-red-50 text-red-600"
+            : "border-gray-300 bg-gray-100 text-gray-800"
         }`}
       >
-        {output
-          ? output.map((line, i) => <p key={i}>{line}</p>)
-          : 'Click "Run Code" to see the output here'}
+        {output && output.length > 0 ? (
+          output.map((line, index) => (
+            <p key={index} className="whitespace-pre-wrap">
+              {line}
+            </p>
+          ))
+        ) : (
+          <p>Click "Run Code" to see the output here</p>
+        )}
       </div>
     </div>
   );

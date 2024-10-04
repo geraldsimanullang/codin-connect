@@ -12,7 +12,7 @@ const Navbar = () => {
           alt="logo"
           height={50} // Atur tinggi logo agar sesuai dengan navbar
           width={150} // Atur lebar logo agar sesuai dengan navbar
-          className="object-contain h-full m-0 p-0" 
+          className="object-contain h-full m-0 p-0"
         />
 
         <div className="w-[500px] h-full flex flex-row items-center justify-end md:mr-20">
@@ -24,7 +24,7 @@ const Navbar = () => {
           </Link>
           <Link
             href="/register"
-            className="cursor-pointer text-gray-800 mx-5 my-5 font-semibold bg-gray-100 rounded-full px-4 py-2"
+            className="cursor-pointer text-white mx-5 my-5 font-semibold bg-blue-500 rounded-full px-4 py-2"
           >
             Register
           </Link>

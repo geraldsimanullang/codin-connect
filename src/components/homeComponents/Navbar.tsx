@@ -22,7 +22,7 @@ const Navigation = () => {
       <ul className="flex justify-end w-full">
         {Menus.map((menu, i) => (
           <li key={i} className="w-20">
-            <a
+            <i
               className="flex flex-col text-center p-5 cursor-pointer px-4"
               onClick={() => setActive(i)}
             >
@@ -35,7 +35,7 @@ const Navigation = () => {
               >
                 {menu.name}
               </span>
-            </a>
+            </i>
           </li>
         ))}
       </ul>
