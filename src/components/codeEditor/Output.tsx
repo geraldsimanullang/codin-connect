@@ -38,7 +38,7 @@ const Output: React.FC<OutputProps> = ({ editorRef, language }) => {
         className={`mb-4 px-4 py-2 border rounded-md ${
           isLoading
             ? "bg-gray-500 cursor-not-allowed"
-            : "border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+            : "border-[#004aad] text-[#004aad] hover:bg-[#004aad] hover:text-white"
         }`}
         onClick={runCode}
         disabled={isLoading}
