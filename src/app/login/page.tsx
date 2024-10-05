@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
+import { doLogin } from "./action";
 
 const Login = () => {
   return (
@@ -35,15 +36,6 @@ const Login = () => {
         >
           Create and solve programming challenges with your friends.
         </motion.p>
-
-        <Link href="/login">
-          <motion.i
-            variants={slideInFromLeft(1)}
-            className="py-2 bg-blue-500 text-center text-white cursor-pointer rounded-lg max-w-[200px] px-5 mx-auto md:mx-0"
-          >
-            Join Now
-          </motion.i>
-        </Link>
       </div>
 
       {/* Right Section */}
@@ -57,7 +49,10 @@ const Login = () => {
               <div className="absolute -top-3 -right-3">
                 <LuLaugh className="text-5xl fill-blue-700 stroke-gray-200 rotate-45" />
               </div>
-              <div className="flex flex-col items-center z-10">
+              <form
+                action={doLogin}
+                className="flex flex-col items-center z-10"
+              >
                 <h1 className="text-4xl font-bold mb-2">Hello</h1>
                 <p className="text-gray-600 mb-6">Sign in to your account</p>
 
@@ -68,6 +63,7 @@ const Login = () => {
                       type="text"
                       placeholder="Username"
                       className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      name="identifier"
                     />
                   </div>
 
@@ -77,6 +73,7 @@ const Login = () => {
                       type="password"
                       placeholder="Password"
                       className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      name="password"
                     />
                   </div>
 
@@ -90,15 +87,18 @@ const Login = () => {
                   </div>
                 </div>
 
-                <button className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-2 px-6 rounded-full shadow-md">
+                <button
+                  className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-2 px-6 rounded-full shadow-md"
+                  type="submit"
+                >
                   Sign in
                 </button>
-              </div>
+              </form>
 
-              <p className="text-xs pr-1">
+              {/* <p className="text-xs pr-1">
                 *Dengan ini anda menyetujui ketentuan dan persyaratan yang
                 berlaku.
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="flex flex-col text-center gap-2 items-center mt-5">
@@ -108,7 +108,7 @@ const Login = () => {
                 href={"https://github.com/geraldsimanullang/codin-connect"}
                 className="font-extrabold"
               >
-                CodinConnectDev
+                CodinConnect
               </Link>
             </h1>
           </div>
