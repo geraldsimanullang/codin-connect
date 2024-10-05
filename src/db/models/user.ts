@@ -71,16 +71,47 @@ export const getProfileById = async (_id: string) => {
 
   const pipeline = [
     { $match: { _id: objectId } },
+
     {
       $lookup: {
         from: "Follows",
-        localField: "_id",
-        foreignField: "userId",
-        as: "followsData",
+        let: { userId: "$_id" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$followingId", "$$userId"] } } },
+          { $project: { followerId: 1, _id: 0 } },
+        ],
+        as: "followers",
       },
     },
 
-    { $unwind: { path: "$followsData", preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: "Follows",
+        let: { userId: "$_id" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$followerId", "$$userId"] } } },
+          { $project: { followingId: 1, _id: 0 } },
+        ],
+        as: "following",
+      },
+    },
+
+    {
+      $lookup: {
+        from: "Users",
+        localField: "followers.followwerId",
+        foreignField: "_id",
+        as: "followerDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "Users",
+        localField: "following.followingId",
+        foreignField: "_id",
+        as: "followingDetails",
+      },
+    },
 
     {
       $project: {
@@ -88,8 +119,30 @@ export const getProfileById = async (_id: string) => {
         name: 1,
         email: 1,
         username: 1,
-        followers: "$followsData.followers",
-        following: "$followsData.following",
+        followers: {
+          $map: {
+            input: "$followerDetails",
+            as: "follower",
+            in: {
+              _id: "$$follower._id",
+              name: "$$follower.name",
+              username: "$$follower.username",
+              email: "$$follower.email",
+            },
+          },
+        },
+        following: {
+          $map: {
+            input: "$followingDetails",
+            as: "following",
+            in: {
+              _id: "$$following._id",
+              name: "$$following.name",
+              username: "$$following.username",
+              email: "$$following.email",
+            },
+          },
+        },
       },
     },
   ];
