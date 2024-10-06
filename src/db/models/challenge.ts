@@ -37,3 +37,7 @@ export const getChallengeById = async (_id: string) => {
 
   return challenge;
 };
+
+export const createNewChallenge = async () => {
+  const db = await getDb();
+};

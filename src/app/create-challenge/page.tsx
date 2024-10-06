@@ -1,8 +1,64 @@
 "use client";
 import Navbar from "@/components/homeComponents/Navbar";
-import { handleCreateChallenge } from "./action";
+import { useState } from "react";
+
+interface TestCase {
+  input: string;
+  expectedOutput: string;
+}
 
 export default function Addquestion() {
+  const [testCases, setTestCases] = useState<TestCase[]>([
+    { input: "", expectedOutput: "" },
+  ]);
+
+  const addTestCase = () => {
+    setTestCases([...testCases, { input: "", expectedOutput: "" }]);
+  };
+
+  const handleChange = (
+    index: number,
+    field: keyof TestCase,
+    value: string
+  ) => {
+    const updatedTestCases = [...testCases];
+    updatedTestCases[index][field] = value;
+    setTestCases(updatedTestCases);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const data = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      functionName: formData.get("functionName") as string,
+      parameters: formData.get("parameters") as string,
+      testCases: testCases,
+    };
+
+    try {
+      const response = await fetch("/api/create-challenge", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log("Challenge created successfully");
+      } else {
+        console.error("Failed to create challenge");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
@@ -12,7 +68,7 @@ export default function Addquestion() {
       <div className="flex-1 flex justify-center items-center">
         <form
           className="bg-white p-8 shadow-lg w-full max-w-3xl"
-          action={handleCreateChallenge}
+          onSubmit={handleSubmit}
         >
           <div className="mb-4">
             <label className="block text-lg font-bold mb-2">Title</label>
@@ -20,6 +76,7 @@ export default function Addquestion() {
               type="text"
               className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
               name="title"
+              required
             />
           </div>
           <div className="mb-4 flex space-x-4">
@@ -31,6 +88,7 @@ export default function Addquestion() {
                 type="text"
                 className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
                 name="description"
+                required
               />
             </div>
             <div className="w-1/2">
@@ -41,6 +99,7 @@ export default function Addquestion() {
                 type="text"
                 className="w-full p-2 text-sm text-gray-700 rounded-lg border bg-transparent focus:border-black focus:ring-black border-black"
                 name="functionName"
+                required
               />
             </div>
           </div>
@@ -50,14 +109,40 @@ export default function Addquestion() {
               type="text"
               className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
               name="parameters"
+              required
             />
           </div>
           <div className="mb-4">
             <label className="block text-lg font-bold mb-2">Test Cases</label>
-            <textarea
-              className="w-full p-2 text-sm text-gray-700 rounded-lg h-32 border bg-transparent focus:border-black focus:ring-black border-black"
-              name="testCases"
-            ></textarea>
+            {testCases.map((testCase, index) => (
+              <div key={index} className="flex gap-3 mb-2">
+                <input
+                  type="text"
+                  name={`testCase${index + 1}`}
+                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                  placeholder="Place input here. example: 1, 2"
+                  value={testCase.input}
+                  onChange={(e) => handleChange(index, "input", e.target.value)}
+                />
+                <input
+                  type="text"
+                  name={`expectedOutput${index + 1}`}
+                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                  placeholder="Place expected output here. example: 3"
+                  value={testCase.expectedOutput}
+                  onChange={(e) =>
+                    handleChange(index, "expectedOutput", e.target.value)
+                  }
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              className="text-sm pt-1 text-gray-500"
+              onClick={addTestCase}
+            >
+              + Click to add other test case...
+            </button>
           </div>
           <button
             type="submit"
