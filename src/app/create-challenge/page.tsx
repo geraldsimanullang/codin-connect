@@ -1,4 +1,6 @@
 "use client";
+
+import * as z from "zod";
 import Navbar from "@/components/homeComponents/Navbar";
 import { useState } from "react";
 
@@ -26,6 +28,21 @@ export default function Addquestion() {
     setTestCases(updatedTestCases);
   };
 
+  const challengeSchema = z.object({
+    title: z.string().nonempty("Title is required"),
+    description: z.string().nonempty("Description is required"),
+    functionName: z.string().nonempty("Function name is required"),
+    parameters: z.string().nonempty("Parameters are required"),
+    testCases: z
+      .array(
+        z.object({
+          input: z.string().nonempty("Test case input is required"),
+          expectedOutput: z.string().nonempty("Expected output is required"),
+        })
+      )
+      .min(1, "At least one test case is required"),
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -39,6 +56,13 @@ export default function Addquestion() {
       parameters: formData.get("parameters") as string,
       testCases: testCases,
     };
+
+    const validationResult = challengeSchema.safeParse(data);
+
+    if (!validationResult.success) {
+      console.error("Validation Error:", validationResult.error.format());
+      return;
+    }
 
     try {
       const response = await fetch("/api/create-challenge", {
@@ -79,18 +103,16 @@ export default function Addquestion() {
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-lg font-bold mb-2">Description</label>
+            <textarea
+              className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+              name="description"
+              rows={5} // Mengatur tinggi awal textarea
+              required
+            ></textarea>
+          </div>
           <div className="mb-4 flex space-x-4">
-            <div className="w-1/2">
-              <label className="block text-lg font-bold mb-2">
-                Description
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
-                name="description"
-                required
-              />
-            </div>
             <div className="w-1/2">
               <label className="block text-lg font-bold mb-2">
                 Function Name
@@ -102,15 +124,15 @@ export default function Addquestion() {
                 required
               />
             </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-lg font-bold mb-2">Parameters</label>
-            <input
-              type="text"
-              className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
-              name="parameters"
-              required
-            />
+            <div className="w-1/2">
+              <label className="block text-lg font-bold mb-2">Parameters</label>
+              <input
+                type="text"
+                className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                name="parameters"
+                required
+              />
+            </div>
           </div>
           <div className="mb-4">
             <label className="block text-lg font-bold mb-2">Test Cases</label>
