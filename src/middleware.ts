@@ -3,6 +3,18 @@ import { cookies } from "next/headers";
 import { readPayloadJose } from "./lib/jwt";
 
 export const middleware = async (request: NextRequest) => {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/") {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
+  return NextResponse.next();
+
   // if (request.url.includes("/api/follow")) {
   //   const cookiesStore = cookies();
   //   const token = cookiesStore.get("token");
@@ -25,6 +37,4 @@ export const middleware = async (request: NextRequest) => {
   //     headers: requestHeaders,
   //   });
   // }
-
-  return NextResponse.next();
 };
