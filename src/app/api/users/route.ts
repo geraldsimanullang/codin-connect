@@ -9,7 +9,6 @@ type Myresponse<T> = {
   error?: string;
 };
 
-// Schema validasi input pengguna menggunakan Zod
 const userInputSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   username: z.string().min(1, { message: "Username is required" }),
@@ -44,10 +43,8 @@ export const POST = async (request: Request) => {
       );
     }
 
-    // Registrasi pengguna setelah validasi sukses
     const user = await doRegister(parseResult.data);
 
-    // Mengirim response sukses dengan status 201
     return NextResponse.json<Myresponse<unknown>>(
       {
         statusCode: 201,
@@ -57,7 +54,6 @@ export const POST = async (request: Request) => {
       { status: 201 }
     );
   } catch (error) {
-    // Menangani error selain dari validasi Zod
     console.error("Unexpected error:", error);
 
     return NextResponse.json<Myresponse<never>>(

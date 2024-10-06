@@ -61,5 +61,12 @@ export const doLogin = async (formdata: FormData) => {
     sameSite: "strict",
   });
 
+  cookies().set("userId", user._id.toString(), {
+    httpOnly: true,
+    secure: false,
+    expires: new Date(Date.now() + 1000 * 60 * 60), // Cookie expires in 1 hour
+    sameSite: "strict",
+  });
+
   return redirect(`${url}`);
 };
