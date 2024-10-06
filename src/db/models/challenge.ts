@@ -39,6 +39,7 @@ export const getChallengeById = async (_id: string) => {
 };
 
 export interface NewChallengeInput {
+  authorId: string;
   title: string;
   description: string;
   functionName: string;
@@ -54,6 +55,7 @@ export const createNewChallenge = async (data: NewChallengeInput) => {
     const db = await getDb();
 
     const newChallenge = {
+      authorId: new ObjectId(data.authorId),
       title: data.title,
       description: data.description,
       functionName: data.functionName,

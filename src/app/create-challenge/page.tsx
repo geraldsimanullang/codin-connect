@@ -9,7 +9,7 @@ interface TestCase {
   expectedOutput: string;
 }
 
-export default function Addquestion() {
+export default function CreateChallenge() {
   const [testCases, setTestCases] = useState<TestCase[]>([
     { input: "", expectedOutput: "" },
   ]);
@@ -71,6 +71,7 @@ export default function Addquestion() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        credentials: "include",
       });
 
       if (response.ok) {
@@ -108,7 +109,7 @@ export default function Addquestion() {
             <textarea
               className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
               name="description"
-              rows={5} // Mengatur tinggi awal textarea
+              rows={5}
               required
             ></textarea>
           </div>

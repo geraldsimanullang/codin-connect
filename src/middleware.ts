@@ -5,7 +5,7 @@ import { readPayloadJose } from "./lib/jwt";
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/") {
+  if (pathname === "/" || pathname === "/create-challenge") {
     const token = request.cookies.get("token")?.value;
 
     if (!token) {

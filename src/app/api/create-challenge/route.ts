@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createNewChallenge } from "@/db/models/challenge";
+import { readPayload } from "@/lib/jwt"; // Fungsi untuk membaca token JWT
 
+// Schema validasi menggunakan Zod
 const challengeSchema = z.object({
   title: z.string().nonempty("Title is required"),
   description: z.string().nonempty("Description is required"),
@@ -18,8 +20,34 @@ const challengeSchema = z.object({
 
 export const POST = async (request: Request) => {
   try {
-    const data = await request.json();
+    // Mengambil cookie dari request headers
+    const cookieHeader = request.headers.get("cookie");
 
+    // Mencari token dalam cookie
+    const token = cookieHeader
+      ?.split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Token is required" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    let decodedPayload;
+    try {
+      decodedPayload = readPayload(token);
+    } catch (error) {
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Validasi data yang diterima dari body request
+    const data = await request.json();
     const validationResult = challengeSchema.safeParse(data);
 
     if (!validationResult.success) {
@@ -29,14 +57,17 @@ export const POST = async (request: Request) => {
         }),
         {
           status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
     }
 
-    await createNewChallenge(data);
+    const newChallenge = {
+      ...data,
+      authorId: decodedPayload.id,
+    };
+
+    await createNewChallenge(newChallenge);
 
     return new Response(
       JSON.stringify({
@@ -44,23 +75,14 @@ export const POST = async (request: Request) => {
       }),
       {
         status: 201,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       }
     );
   } catch (error) {
-    console.error(error);
-    return new Response(
-      JSON.stringify({
-        error: "Something went wrong",
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    console.error("Error creating challenge:", error);
+    return new Response(JSON.stringify({ error: "Something went wrong" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 };
