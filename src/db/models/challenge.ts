@@ -50,6 +50,31 @@ export interface NewChallengeInput {
   }>;
 }
 
+export const getChallenges = async () => {
+  const db = await getDb();
+  const challenges = await db
+    .collection("Challenges")
+    .aggregate([
+      {
+        $lookup: {
+          from: "Users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ])
+    .toArray();
+
+  return challenges;
+};
+
 export const createNewChallenge = async (data: NewChallengeInput) => {
   try {
     const db = await getDb();

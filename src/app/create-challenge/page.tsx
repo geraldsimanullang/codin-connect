@@ -3,6 +3,7 @@
 import * as z from "zod";
 import Navbar from "@/components/homeComponents/Navbar";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface TestCase {
   input: string;
@@ -43,6 +44,8 @@ export default function CreateChallenge() {
       .min(1, "At least one test case is required"),
   });
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -74,8 +77,14 @@ export default function CreateChallenge() {
         credentials: "include",
       });
 
+      console.log(response);
+
       if (response.ok) {
         console.log("Challenge created successfully");
+        const result = await response.json();
+        const { newChallengeId } = result;
+
+        router.push(`/challenge/${newChallengeId}`);
       } else {
         console.error("Failed to create challenge");
       }
