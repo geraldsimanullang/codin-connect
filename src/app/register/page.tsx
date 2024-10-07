@@ -1,13 +1,52 @@
 "use client";
 import { Button } from "@nextui-org/react";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { handleRegister } from "./action";
+import { useSearchParams } from "next/navigation";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState<any>({});
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors: any = {};
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    setErrors({});
+    await handleRegister(new FormData(e.target as HTMLFormElement));
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -36,15 +75,6 @@ const Register = () => {
         >
           Create and solve programming challenges with your friends.
         </motion.p>
-
-        <Link href="/login">
-          <motion.i
-            variants={slideInFromLeft(1)}
-            className="py-2 bg-blue-500 text-center text-white cursor-pointer rounded-lg max-w-[200px] px-5 mx-auto md:mx-0"
-          >
-            Join Now
-          </motion.i>
-        </Link>
       </div>
 
       {/* Right Section */}
@@ -59,10 +89,10 @@ const Register = () => {
                 <LuLaugh className="text-5xl fill-blue-700 stroke-gray-200 rotate-45" />
               </div>
 
-              <form 
-              action={handleRegister}
-              method="POST"
-              className="flex flex-col items-center z-10">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-center z-10"
+              >
                 <h1 className="text-4xl font-bold mb-2">Register</h1>
                 <p className="text-gray-600 mb-6">Sign up to get started</p>
 
@@ -73,8 +103,16 @@ const Register = () => {
                       type="text"
                       name="name"
                       placeholder="Name"
-                      className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      className={`pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none ${
+                        errors.name && "border-red-500"
+                      }`}
+                      onChange={handleInputChange}
                     />
+                    {errors.name && (
+                      <span className="text-red-500 text-xs">
+                        {errors.name}
+                      </span>
+                    )}
                   </div>
 
                   <div className="relative mb-4">
@@ -83,8 +121,16 @@ const Register = () => {
                       type="text"
                       name="username"
                       placeholder="Username"
-                      className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      className={`pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none ${
+                        errors.username && "border-red-500"
+                      }`}
+                      onChange={handleInputChange}
                     />
+                    {errors.username && (
+                      <span className="text-red-500 text-xs">
+                        {errors.username}
+                      </span>
+                    )}
                   </div>
 
                   <div className="relative mb-4">
@@ -93,8 +139,16 @@ const Register = () => {
                       type="email"
                       name="email"
                       placeholder="Email"
-                      className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      className={`pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none ${
+                        errors.email && "border-red-500"
+                      }`}
+                      onChange={handleInputChange}
                     />
+                    {errors.email && (
+                      <span className="text-red-500 text-xs">
+                        {errors.email}
+                      </span>
+                    )}
                   </div>
 
                   <div className="relative mb-4">
@@ -103,8 +157,24 @@ const Register = () => {
                       type="password"
                       name="password"
                       placeholder="Password"
-                      className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
+                      className={`pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none ${
+                        errors.password && "border-red-500"
+                      }`}
+                      onChange={handleInputChange}
                     />
+                    {errors.password && (
+                      <span className="text-red-500 text-xs">
+                        {errors.password}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-center m-6">
+                    <div className="text-gray-400 text-sm">
+                      Already have an account?
+                      <Link href={"/login"} className="text-blue-600">
+                        Login
+                      </Link>
+                    </div>
                   </div>
                 </div>
 

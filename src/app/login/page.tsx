@@ -1,13 +1,24 @@
 "use client";
 import { Button } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { doLogin } from "./action";
 
 const Login = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error) {
+      setErrorMessage(decodeURIComponent(error));
+    }
+  }, [searchParams]);
+
   return (
     <motion.div
       initial="hidden"
@@ -49,6 +60,14 @@ const Login = () => {
               <div className="absolute -top-3 -right-3">
                 <LuLaugh className="text-5xl fill-blue-700 stroke-gray-200 rotate-45" />
               </div>
+
+              {/* Tampilkan Error Message */}
+              {errorMessage && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 flex justify-center">
+                  <span className="block sm:inline">{errorMessage}</span>
+                </div>
+              )}
+
               <form
                 action={doLogin}
                 className="flex flex-col items-center z-10"
@@ -94,11 +113,6 @@ const Login = () => {
                   Sign in
                 </button>
               </form>
-
-              {/* <p className="text-xs pr-1">
-                *Dengan ini anda menyetujui ketentuan dan persyaratan yang
-                berlaku.
-              </p> */}
             </div>
           </div>
           <div className="flex flex-col text-center gap-2 items-center mt-5">

@@ -9,6 +9,13 @@ import { cookies } from "next/headers";
 
 const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+export const logout = async () => {
+  const cookieStore = cookies();
+  cookieStore.delete("token");
+
+  return redirect("/login");
+};
+
 export const doLogin = async (formdata: FormData) => {
   const loginInputSchema = z.object({
     identifier: z.string(),
