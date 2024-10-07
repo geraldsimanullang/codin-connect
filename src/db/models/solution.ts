@@ -17,9 +17,10 @@ export interface NewSolutionInput {
   authorId: string;
   challengeId: string;
   solution: string;
+  language: string;
 }
 
-export const createNewSolution = async (data: NewSolutionInput) => {
+export const createOrUpdateNewSolution = async (data: NewSolutionInput) => {
   try {
     const db = await getDb();
 
@@ -27,12 +28,27 @@ export const createNewSolution = async (data: NewSolutionInput) => {
       authorId: new ObjectId(data.authorId),
       challengeId: new ObjectId(data.challengeId),
       solution: data.solution,
+      language: data.language,
       createdAt: new Date(),
     };
 
-    const result = await db.collection(COLLECTION_NAME).insertOne(newChallenge);
+    const existingSolution = await db.collection(COLLECTION_NAME).findOne({
+      authorId: newChallenge.authorId,
+      challengeId: newChallenge.challengeId,
+    });
 
-    return result;
+    if (existingSolution) {
+      const updateResult = await db
+        .collection(COLLECTION_NAME)
+        .updateOne({ _id: existingSolution._id }, { $set: newChallenge });
+
+      return updateResult;
+    } else {
+      const insertResult = await db
+        .collection(COLLECTION_NAME)
+        .insertOne(newChallenge);
+      return insertResult;
+    }
   } catch (error) {
     console.error("Error creating new challenge:", error);
     throw error;

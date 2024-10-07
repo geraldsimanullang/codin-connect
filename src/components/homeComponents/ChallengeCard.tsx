@@ -28,7 +28,7 @@ const ChallengeCard = () => {
 
   const fetchChallenges = async () => {
     try {
-      const response = await fetch(`${url}/api/challenge`);
+      const response = await fetch(`/api/challenge`);
       console.log(response);
       if (!response.ok) {
         throw new Error("Failed to fetch challenges");
