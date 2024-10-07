@@ -50,7 +50,11 @@ const ChallengeCard = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading challenges...</p>;
+    return (
+      <p className="flex flex-col items-center min-h-screen p-4">
+        Loading challenges...
+      </p>
+    );
   }
 
   if (error) {
@@ -71,17 +75,13 @@ const ChallengeCard = () => {
             key={challenge._id}
             className="card bg-white shadow-md rounded-lg p-4"
           >
-            <h2 className="text-xl font-bold mb-2">{challenge.title}</h2>
+            <h2 className="text-xl font-bold">{challenge.title}</h2>
+            <div className="text-xs text-gray-500 mb-5">
+              <strong></strong> {challenge.author?.name || "Unknown"}{" "}
+            </div>
             <p className="text-gray-700 mb-4">{challenge.description}</p>
             <div className="text-sm">
               <strong>Function:</strong> {challenge.functionName}
-            </div>
-            <div className="text-sm">
-              <strong>Parameters:</strong> {challenge.parameters}
-            </div>
-            <div className="text-sm">
-              <strong>Author:</strong> {challenge.author?.name || "Unknown"}{" "}
-              {/* Display author's name */}
             </div>
           </div>
         ))}
