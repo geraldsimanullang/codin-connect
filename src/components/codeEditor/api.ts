@@ -1,3 +1,5 @@
+"use server";
+
 import { LANGUAGE_VERSIONS } from "./constans";
 
 interface ExecuteCodeResponse {
@@ -5,14 +7,14 @@ interface ExecuteCodeResponse {
     output: string;
     stderr?: string;
   };
-  [key: string]: any; // Additional fields if needed
+  [key: string]: any;
 }
 
 export const executeCode = async (
   language: string,
   sourceCode: string
 ): Promise<ExecuteCodeResponse> => {
-  const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+  const response = await fetch("http://34.128.69.39:2000/api/v2/execute", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,6 +35,7 @@ export const executeCode = async (
   }
 
   const data = await response.json();
+  console.log(data);
 
   return data as ExecuteCodeResponse;
 };
