@@ -1,12 +1,14 @@
+
 "use client"; 
 
 import { useState, useEffect } from "react";
 import { LuBadgeCheck, LuBell } from "react-icons/lu";
-import ProfileServer from "./profileServer";
-import  Link from "next/link"
+import Link from "next/link";
+
+
 interface User {
-  name: string; 
-  username: string; 
+  name: string;
+  username: string;
 }
 
 interface Profile {
@@ -16,30 +18,43 @@ interface Profile {
   followers: User[]; 
 }
 
-const Profile = () => {
+const Profile = ({ params }: { params: { username: string } }) => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const { username } = params; // Mengambil username dari params
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const fetchedProfile = await ProfileServer(); 
-      setProfile(fetchedProfile);
+      try {
+        const response = await fetch(`/api/profile/${username}`);
+        if (!response.ok) {
+          throw new Error("Pengguna tidak ditemukan");
+        }
+        const fetchedProfile = await response.json();
+        setProfile(fetchedProfile);
+      } catch (err: any) {
+        setError(err.message);
+      }
     };
+    
     fetchProfile();
-  }, []);
+  }, [username]);
 
   const handleShowFollowing = () => {
     setShowFollowing((prev) => !prev);
-    setShowFollowers(false); 
+    setShowFollowers(false); // Menutup followers jika following dibuka
   };
 
   const handleShowFollowers = () => {
     setShowFollowers((prev) => !prev);
-    setShowFollowing(false); 
+    setShowFollowing(false); // Menutup following jika followers dibuka
   };
 
-  if (!profile) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>; // Menampilkan pesan kesalahan jika ada
+  if (!profile) return <p>Loading...</p>; // Menampilkan loading jika profil belum ada
 
   return (
     <>
@@ -48,7 +63,7 @@ const Profile = () => {
         <main className="flex-1 p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold">My Profile</h1>
+            {/* <h1 className="text-2xl font-bold">Profile {profile.username}</h1> */}
             <LuBell className="text-2xl text-gray-700" />
           </div>
 
@@ -62,7 +77,7 @@ const Profile = () => {
             </div>
             <div>
               <h2 className="text-xl font-bold">{profile.name}</h2>
-              
+              {/* <p className="text-gray-600">@{profile.username}</p> */}
             </div>
           </div>
 
