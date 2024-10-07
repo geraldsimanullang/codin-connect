@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { followUSer } from "@/db/models/user";
+import { followUser } from "@/db/models/follow";
 import { readPayload } from "@/lib/jwt";
 
 export async function POST(request: Request) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "userId dan followersId os required" });
     }
 
-    await followUSer(userId, followUserId);
+    await followUser(userId, followUserId);
 
     return NextResponse.json(
       { message: "Successfully followed user" },

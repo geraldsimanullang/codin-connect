@@ -1,17 +1,24 @@
 "use client";
 
 import React from "react";
-<<<<<<< HEAD
-import Sidebar from "@/components/homeComponents/HomeNavbar";
-=======
+// <<<<<<< HEAD
+// <<<<<<< HEAD
+// import Sidebar from "@/components/homeComponents/HomeNavbar";
+// =======
 import Sidebar from "@/components/homeComponents/Navbar";
->>>>>>> d34ab86b8aa463118ed4931d4b64a02411f187a3
+// >>>>>>> d34ab86b8aa463118ed4931d4b64a02411f187a3
+// =======
+import Navbar from "@/components/homeComponents/Navbar";
+// >>>>>>> a7741c8f1bca745710ca8116ad8b9b08accaf30c
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="w-full p-4 bg-gray-50">
+    <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Konten Utama */}
+      <div className="flex-grow p-4 bg-gray-50">
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
         {/* Kounter Statistics */}
@@ -30,7 +37,7 @@ const Dashboard: React.FC = () => {
           <div className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-bold">0</h2>
-              <p className="text-sm text-gray-500">apa aja </p>
+              <p className="text-sm text-gray-500">apa aja</p>
             </div>
             <div className="text-black">
               <i className="fas fa-heartbeat"></i>
@@ -57,6 +64,8 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Tambah Question Button */}
         <div className="mb-5">
           <button className="mt-6 py-2 px-4 bg-black text-white rounded-lg shadow-md">
             + Add Question
@@ -88,8 +97,6 @@ const Dashboard: React.FC = () => {
             </table>
           </div>
         </div>
-
-        {/* Tambah Kounter Button */}
       </div>
     </div>
   );
