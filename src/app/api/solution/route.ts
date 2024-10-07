@@ -28,18 +28,6 @@ export const POST = async (request: Request) => {
     }
 
     const data = await request.json();
-    const result = await createNewSolution(data);
-
-    return new Response(
-      JSON.stringify({
-        message: "Challenge created successfully",
-        newChallengeId: result.insertedId.toString(),
-      }),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
   } catch (error) {
     console.error("Error creating challenge:", error);
     return new Response(JSON.stringify({ error: "Something went wrong" }), {

@@ -62,7 +62,7 @@ export const doLogin = async (formdata: FormData) => {
   cookies().set("token", token, {
     httpOnly: true,
     secure: false,
-    expires: new Date(Date.now() + 1000 * 60 * 60),
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
     sameSite: "strict",
   });
 

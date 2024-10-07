@@ -88,9 +88,6 @@ const Output: React.FC<OutputProps> = ({
           body: JSON.stringify({
             sourceCode,
             language,
-            functionName,
-            passedCount: passCount,
-            totalTestCases: testCases.length,
           }),
         });
 
