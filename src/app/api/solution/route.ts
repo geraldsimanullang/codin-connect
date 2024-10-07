@@ -28,8 +28,35 @@ export const POST = async (request: Request) => {
     }
 
     const data = await request.json();
+
+    const { solution, challengeId, language } = data;
+
+    if (!solution || !challengeId) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const newSolution = await createNewSolution({
+      authorId: decodedPayload.id,
+      challengeId,
+      solution,
+      language,
+    });
+
+    return new Response(
+      JSON.stringify({ message: "Solution created", solution: newSolution }),
+      {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
-    console.error("Error creating challenge:", error);
+    console.error("Error creating solution:", error);
     return new Response(JSON.stringify({ error: "Something went wrong" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

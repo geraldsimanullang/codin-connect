@@ -17,6 +17,7 @@ export interface NewSolutionInput {
   authorId: string;
   challengeId: string;
   solution: string;
+  language: string;
 }
 
 export const createNewSolution = async (data: NewSolutionInput) => {
@@ -27,6 +28,7 @@ export const createNewSolution = async (data: NewSolutionInput) => {
       authorId: new ObjectId(data.authorId),
       challengeId: new ObjectId(data.challengeId),
       solution: data.solution,
+      language: data.language,
       createdAt: new Date(),
     };
 

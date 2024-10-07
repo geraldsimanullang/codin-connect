@@ -79,7 +79,7 @@ const Output: React.FC<OutputProps> = ({
       setIsError(false);
 
       if (passCount === testCases.length) {
-        const response = await fetch(`${url}/api/solution`, {
+        const response = await fetch(`/api/solution`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
