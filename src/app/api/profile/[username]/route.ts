@@ -1,4 +1,4 @@
-import { getUserByUsername } from "@/db/models/user";
+import { getProfileByUsername } from "@/db/models/user";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { username } = params;
-    const userProfile = await getUserByUsername(username);
+    const userProfile = await getProfileByUsername(username);
     if (!userProfile) {
       return NextResponse.json(
         { error: "Pengguna tidak ditemukan" },
