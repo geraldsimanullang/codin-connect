@@ -1,4 +1,4 @@
-import { createNewSolution } from "@/db/models/solution";
+import { createOrUpdateNewSolution } from "@/db/models/solution";
 import { readPayload } from "@/lib/jwt";
 
 export const POST = async (request: Request) => {
@@ -42,7 +42,7 @@ export const POST = async (request: Request) => {
       );
     }
 
-    const newSolution = await createNewSolution({
+    const newSolution = await createOrUpdateNewSolution({
       authorId: decodedPayload.id,
       challengeId,
       solution,
