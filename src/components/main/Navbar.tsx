@@ -11,13 +11,13 @@ const Navbar = () => {
           src="/logo-coding-connect.png"
           alt="logo"
           height={50} // Atur tinggi logo agar sesuai dengan navbar
-<<<<<<< HEAD
+// <<<<<<< HEAD
           width={180} // Atur lebar logo agar sesuai dengan navbar
           className="object-contain h-full m-0 p-0" 
-=======
-          width={150} // Atur lebar logo agar sesuai dengan navbar
-          className="object-contain h-full m-0 p-0"
->>>>>>> d34ab86b8aa463118ed4931d4b64a02411f187a3
+// =======
+          // width={150} // Atur lebar logo agar sesuai dengan navbar
+          // className="object-contain h-full m-0 p-0"
+// {/* >>>>>>> d34ab86b8aa463118ed4931d4b64a02411f187a3 */}
         />
 
         <div className="w-[500px] h-full flex flex-row items-center justify-end md:mr-20">
