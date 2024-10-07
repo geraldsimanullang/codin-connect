@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 // import logo from ""
 
-const Navbar = () => {
+const NavbarLanding = () => {
   return (
     <div className="w-full h-[65px] fixed top-0 bg-white backdrop-blur-md z-50 shadow-md">
       <div className="w-full h-full flex flex-row items-center justify-between m-auto px-[10px]">
@@ -34,4 +34,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarLanding;
