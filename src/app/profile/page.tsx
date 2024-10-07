@@ -1,19 +1,30 @@
-"use client"; 
+"use client";
 
 import { useState, useEffect } from "react";
 import { LuBadgeCheck, LuBell } from "react-icons/lu";
 import ProfileServer from "./profileServer";
-import  Link from "next/link"
+import Link from "next/link";
+
 interface User {
-  name: string; 
-  username: string; 
+  name: string;
+  username: string;
+}
+
+interface Challenge {
+  _id: string;
+  title: string;
+  description: string;
+  functionName: string;
+  parameters: string;
+  testCases: string[];
 }
 
 interface Profile {
-  name: string; 
-  username: string; 
-  following: User[]; 
-  followers: User[]; 
+  name: string;
+  username: string;
+  following: User[];
+  followers: User[];
+  userChallenges: Challenge[]; // Tambahkan ini
 }
 
 const Profile = () => {
@@ -23,20 +34,22 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const fetchedProfile = await ProfileServer(); 
-      setProfile(fetchedProfile);
+      const fetchedProfile = await ProfileServer();
+  
+      setProfile(fetchedProfile as Profile);
+      
     };
     fetchProfile();
   }, []);
 
   const handleShowFollowing = () => {
     setShowFollowing((prev) => !prev);
-    setShowFollowers(false); 
+    setShowFollowers(false);
   };
 
   const handleShowFollowers = () => {
     setShowFollowers((prev) => !prev);
-    setShowFollowing(false); 
+    setShowFollowing(false);
   };
 
   if (!profile) return <p>Loading...</p>;
@@ -44,7 +57,6 @@ const Profile = () => {
   return (
     <>
       <div className="flex">
-        {/* <Sidebar /> */}
         <main className="flex-1 p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -55,14 +67,12 @@ const Profile = () => {
           {/* Profile Section */}
           <div className="flex items-start mb-8 gap-6">
             <div className="relative">
-              {/* Placeholder image */}
               <div className="absolute top-0 right-0 bg-white rounded-full p-1 -mt-2 -mr-2">
                 <LuBadgeCheck className="text-green-500 text-xl" />
               </div>
             </div>
             <div>
               <h2 className="text-xl font-bold">{profile.name}</h2>
-              
             </div>
           </div>
 
@@ -83,12 +93,11 @@ const Profile = () => {
           {/* Daftar Following */}
           {showFollowing && (
             <div className="mt-4">
-              {/* <h3 className="text-xl font-bold">Following</h3> */}
               <ul>
                 {profile.following.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                    {user.name} ({user.username})
+                      {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
@@ -99,18 +108,35 @@ const Profile = () => {
           {/* Daftar Followers */}
           {showFollowers && (
             <div className="mt-4">
-              {/* <h3 className="text-xl font-bold">Followers</h3> */}
               <ul>
                 {profile.followers.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                    {user.name} ({user.username})
+                      {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           )}
+
+          {/* Daftar User Challenges */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold">User Challenges</h3>
+            {profile.userChallenges.length === 0 ? (
+              <p>No challenges found</p>
+            ) : (
+              <ul>
+                {profile.userChallenges.map((challenge) => (
+                  <li key={challenge._id} className="text-gray-600 mt-2">
+                    <strong>{challenge.title}:</strong> {challenge.description}
+                    <br />
+                    <strong>Function:</strong> {challenge.functionName} ({challenge.parameters})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </main>
       </div>
     </>

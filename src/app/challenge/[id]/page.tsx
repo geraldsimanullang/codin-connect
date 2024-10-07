@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ChallengeModel } from "@/db/models/challenge";
 import Navbar from "@/components/homeComponents/Navbar";
 import Image from "next/image";
-import { getProfileById } from "@/db/models/user";
+import Link from "next/link";
 
 export default function Challenge() {
   const { id }: { id: string } = useParams();
@@ -26,12 +26,20 @@ export default function Challenge() {
   return (
     <>
       {challenge ? (
-        <div className="flex flex-col min-h-screen min-w-screen">
+        <div className="flex flex-col min-h-screen">
           <Navbar />
-          <div className="flex min-h-screen min-w-screen">
-            {/* Challenge Description Section */}
-            <div className="min-h-screen w-1/2 p-8 bg-gray-100">
-              <h1 className="text-3xl font-bold mb-4">{challenge?.title}</h1>
+          <div className="flex-grow flex justify-center bg-gray-100">
+            <div className="max-w-7xl w-full p-8 flex flex-col">
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">{challenge?.title}</h1>
+
+                <Link href={`/solve/${id}`}>
+                  <button className="bg-black text-white px-6 py-2 rounded-md">
+                    Solve
+                  </button>
+                </Link>
+              </div>
+
               <p className="text-lg mb-6">{challenge?.description}</p>
               <h2 className="text-xl font-semibold mb-2">Test Cases:</h2>
               <div className="space-y-4">
@@ -41,7 +49,8 @@ export default function Challenge() {
                     className="p-4 bg-white shadow rounded-md border border-gray-200"
                   >
                     <p className="font-medium">
-                      <span className="text-gray-500">Input:</span> {testCase.input}
+                      <span className="text-gray-500">Input:</span>{" "}
+                      {testCase.input}
                     </p>
                     <p className="font-medium">
                       <span className="text-gray-500">Expected Output:</span>{" "}
@@ -50,11 +59,6 @@ export default function Challenge() {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Placeholder for Code Editor and Output */}
-            <div className="min-h-screen w-1/2 p-8 bg-gray-50 flex flex-col">
-              {/* Add code editor and output section here */}
             </div>
           </div>
         </div>

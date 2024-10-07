@@ -9,6 +9,13 @@ import { cookies } from "next/headers";
 
 const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+export const logout = async () => {
+  const cookieStore = cookies();
+  cookieStore.delete("token");
+
+  return redirect("/login");
+};
+
 export const doLogin = async (formdata: FormData) => {
   const loginInputSchema = z.object({
     loginField: z.string(),
@@ -55,7 +62,7 @@ export const doLogin = async (formdata: FormData) => {
   cookies().set("token", token, {
     httpOnly: true,
     secure: false,
-    expires: new Date(Date.now() + 1000 * 60 * 60),
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
     sameSite: "strict",
   });
 

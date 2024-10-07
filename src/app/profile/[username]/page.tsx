@@ -126,6 +126,8 @@ const Profile = ({ params }: { params: { username: string } }) => {
               </ul>
             </div>
           )}
+
+          
         </main>
       </div>
     </>
