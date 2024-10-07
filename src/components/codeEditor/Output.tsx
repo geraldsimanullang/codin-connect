@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 
 const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
   language: string;
@@ -26,7 +28,11 @@ const Output: React.FC<OutputProps> = ({
   const [output, setOutput] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+<<<<<<< HEAD
+  const [passedCount, setPassedCount] = useState<number>(0);
+=======
   const router = useRouter();
+>>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
 
   const runCode = async () => {
     if (!editorRef.current) return;
@@ -73,6 +79,7 @@ const Output: React.FC<OutputProps> = ({
       }
 
       setOutput(finalResults);
+      setPassedCount(passCount);
       setIsError(false);
 
       if (passCount === testCases.length) {
@@ -83,9 +90,14 @@ const Output: React.FC<OutputProps> = ({
           },
           credentials: "include",
           body: JSON.stringify({
+<<<<<<< HEAD
+            sourceCode,
+            language,
+=======
             solution: sourceCode,
             language,
             challengeId,
+>>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
           }),
         });
 
@@ -95,7 +107,10 @@ const Output: React.FC<OutputProps> = ({
 
         const data = await response.json();
         console.log("Solution submitted successfully:", data);
+<<<<<<< HEAD
+=======
         router.push(`/profile`);
+>>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
       }
     } catch (error: any) {
       console.log(error);
