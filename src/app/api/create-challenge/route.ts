@@ -20,10 +20,8 @@ const challengeSchema = z.object({
 
 export const POST = async (request: Request) => {
   try {
-    // Mengambil cookie dari request headers
     const cookieHeader = request.headers.get("cookie");
 
-    // Mencari token dalam cookie
     const token = cookieHeader
       ?.split("; ")
       .find((row) => row.startsWith("token="))
@@ -46,7 +44,6 @@ export const POST = async (request: Request) => {
       });
     }
 
-    // Validasi data yang diterima dari body request
     const data = await request.json();
     const validationResult = challengeSchema.safeParse(data);
 
@@ -67,11 +64,13 @@ export const POST = async (request: Request) => {
       authorId: decodedPayload.id,
     };
 
-    await createNewChallenge(newChallenge);
+    const result = await createNewChallenge(newChallenge);
+    console.log(result.insertedId.toString());
 
     return new Response(
       JSON.stringify({
         message: "Challenge created successfully",
+        newChallengeId: result.insertedId.toString(),
       }),
       {
         status: 201,

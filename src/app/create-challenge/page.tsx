@@ -77,9 +77,14 @@ export default function CreateChallenge() {
         credentials: "include",
       });
 
+      console.log(response);
+
       if (response.ok) {
         console.log("Challenge created successfully");
-        router.push("/");
+        const result = await response.json();
+        const { newChallengeId } = result;
+
+        router.push(`/challenge/${newChallengeId}`);
       } else {
         console.error("Failed to create challenge");
       }
