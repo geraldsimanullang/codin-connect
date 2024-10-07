@@ -45,6 +45,15 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserByUsername = async (username: string) => {
   const db = await getDb();
+  const user = (await db
+    .collection(COLLECTION_NAME)
+    .findOne({ username: username })) as UserModel;
+
+  return user;
+};
+
+export const getProfileByUsername = async (username: string) => {
+  const db = await getDb();
   const pipeline = [
     { $match: { username: username } },
 
