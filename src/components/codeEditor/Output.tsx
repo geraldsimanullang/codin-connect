@@ -4,6 +4,7 @@ import { useState } from "react";
 import { executeCode } from "./api";
 import * as monaco from "monaco-editor";
 import { TestCaseModel } from "@/db/models/challenge";
+import { useRouter } from "next/navigation";
 
 const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -11,24 +12,21 @@ interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
   language: string;
   functionName: string;
+  challengeId: string;
   testCases: TestCaseModel[];
-}
-
-interface TestCase {
-  input: string;
-  expectedOutput: string;
 }
 
 const Output: React.FC<OutputProps> = ({
   editorRef,
   language,
   functionName,
+  challengeId,
   testCases,
 }) => {
   const [output, setOutput] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [passedCount, setPassedCount] = useState<number>(0);
+  const router = useRouter();
 
   const runCode = async () => {
     if (!editorRef.current) return;
@@ -75,7 +73,6 @@ const Output: React.FC<OutputProps> = ({
       }
 
       setOutput(finalResults);
-      setPassedCount(passCount);
       setIsError(false);
 
       if (passCount === testCases.length) {
@@ -86,8 +83,9 @@ const Output: React.FC<OutputProps> = ({
           },
           credentials: "include",
           body: JSON.stringify({
-            sourceCode,
+            solution: sourceCode,
             language,
+            challengeId,
           }),
         });
 
@@ -97,6 +95,7 @@ const Output: React.FC<OutputProps> = ({
 
         const data = await response.json();
         console.log("Solution submitted successfully:", data);
+        router.push(`/profile`);
       }
     } catch (error: any) {
       console.log(error);
