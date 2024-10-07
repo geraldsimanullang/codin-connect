@@ -11,15 +11,15 @@ const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export const doLogin = async (formdata: FormData) => {
   const loginInputSchema = z.object({
-    identifier: z.string(),
+    loginField: z.string(),
     password: z.string(),
   });
 
-  const identifier = formdata.get("identifier")?.toString() || "";
+  const loginField = formdata.get("loginField")?.toString() || "";
   const password = formdata.get("password");
 
   const parseData = loginInputSchema.safeParse({
-    identifier,
+    loginField,
     password,
   });
 
@@ -33,11 +33,9 @@ export const doLogin = async (formdata: FormData) => {
 
   let user = null;
 
-  if (identifier.includes("@")) {
-    user = await getUserByEmail(parseData.data.identifier);
-  } else {
-    user = await getUserByUsername(parseData.data.identifier);
-  }
+  user =
+    (await getUserByEmail(parseData.data.loginField)) ||
+    (await getUserByUsername(parseData.data.loginField));
 
   if (
     !user ||
