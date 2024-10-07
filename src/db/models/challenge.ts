@@ -15,6 +15,7 @@ export type ChallengeModel = {
   functionName: string;
   parameters: string;
   testCases: TestCaseModel[];
+  author: string
 };
 
 const DATABASE_NAME = process.env.DATABASE_NAME;
@@ -22,21 +23,42 @@ const COLLECTION_NAME = "Challenges";
 
 export const getDb = async () => {
   const client = await getMongoClientInstance();
-  const db: Db = client.db(DATABASE_NAME);
-
-  return db;
+  return client.db(DATABASE_NAME);
 };
 
-export const getChallengeById = async (_id: string) => {
+export const getChallengeById = async (id: string): Promise<ChallengeModel | null> => {
   const db = await getDb();
-  const objectId = new ObjectId(_id);
+  const objectId = new ObjectId(id);
 
-  const challenge = (await db
-    .collection(COLLECTION_NAME)
-    .findOne({ _id: objectId })) as ChallengeModel;
+  const challenge = await db.collection(COLLECTION_NAME).aggregate([
+    { $match: { _id: objectId } },
+    {
+      $lookup: {
+        from: "Users", // Nama koleksi untuk penulis
+        localField: "authorId",
+        foreignField: "_id",
+        as: "author", // Nama field untuk menyimpan data penulis
+      },
+    },
+    {
+      $unwind: {
+        path: "$author",
+        preserveNullAndEmptyArrays: true, // Jika tidak ada penulis, tetap tampilkan tantangan
+      },
+    },
+  ]).toArray();
 
-  return challenge;
+  return challenge.length > 0 ? {
+    _id: challenge[0]._id,
+    title: challenge[0].title,
+    description: challenge[0].description,
+    functionName: challenge[0].functionName,
+    parameters: challenge[0].parameters,
+    testCases: challenge[0].testCases,
+    author: challenge[0].author.name, // Ganti 'name' dengan field yang sesuai dari koleksi Users
+  } : null; 
 };
+
 
 export interface NewChallengeInput {
   authorId: string;
