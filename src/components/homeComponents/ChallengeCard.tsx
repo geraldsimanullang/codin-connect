@@ -1,88 +1,92 @@
+"use client";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
-// Definisikan tipe untuk test case
-// interface TestCase {
-//   input: string;
-//   expectedOutput: string;
-// }
-
-// interface Challenge {
-//   title: string;
-//   description: string;
-//   functionName: string;
-//   parameters: string[];
-//   testCases: TestCase[];
-//   createdAt: string;
-// }
-
-// interface ChallengeCardProps {
-//   challengeId: string
-// }
-
-// const ChallengeCard: React.FC<ChallengeCardProps> = ({ challengeId }) => {
-//   const [challenge, setChallenge] = useState<Challenge | null>(null); 
-//   const [loading, setLoading] = useState<boolean>(true); 
-//   const [error, setError] = useState<string | null>(null); 
-
-//   useEffect(() => {
-//     const fetchChallenge = async () => {
-//       // Cek apakah challengeId valid
-//       if (!challengeId) {
-//         setError("Invalid challenge ID");
-//         setLoading(false);
-//         return;
-//       }
-
-//       try {
-//         const response = await fetch(`/api/challenges/${challengeId}`);
-//         if (!response.ok) {
-//           throw new Error("Challenge not found");
-//         }
-
-//         const data: Challenge = await response.json(); 
-//         setChallenge(data); 
-//       } catch (error) {
-//         setError((error as Error).message); 
-//       } finally {
-//         setLoading(false); 
-//       }
-//     };
-
-//     fetchChallenge(); 
-//   }, [challengeId]); 
-
-//   if (loading) return <div className="text-center">Loading...</div>;
-//   if (error) return <div className="text-red-500">Error: {error}</div>;
-
-//   return (
-//     // <div className="p-6 border border-gray-300 rounded-lg shadow-md">
-//     //   <h2 className="text-2xl font-bold mb-4">{challenge?.title}</h2>
-//     //   <p>{challenge?.description}</p>
-//     //   <p>
-//     //     <strong>Function Name:</strong> {challenge?.functionName}
-//     //   </p>
-//     //   <p>
-//     //     <strong>Parameters:</strong>{" "}
-//     //     {challenge?.parameters? challenge.parameters.join(", ") : "No parameters provided"}
-//     //   </p>
-//     //   <p>
-//     //     <strong>Test Cases:</strong> {challenge?.testCases.length}
-//     //   </p>
-//     //   <p>
-//     //     <strong>Created At:</strong>{" "}
-//     //     {challenge?.createdAt ? new Date(challenge.createdAt).toLocaleString() : "N/A"}
-//     //   </p>
-//     // </div>
-//     <h1>masuk gaaaaa</h1>
-//   );
-// };
-
-export default function ChallengeCard(){
-  return (
-    <>
-    <h1>Masuk gaaa card nyaaaaaa</h1>
-    </>
-  )
+interface Challenge {
+  _id: string;
+  title: string;
+  description: string;
+  functionName: string;
+  parameters: string;
+  authorId: string; 
+  author?: {
+    name: string; 
+    // username:
+  };
+  testCases: Array<{
+    input: string;
+    expectedOutput: string;
+  }>;
 }
 
-// export default ChallengeCard;
+const ChallengeCard = () => {
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchChallenges = async () => {
+    try {
+      const response = await fetch("/api/challenge");
+      if (!response.ok) {
+        throw new Error("Failed to fetch challenges");
+      }
+      const data: Challenge[] = await response.json();
+      setChallenges(data);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message);
+      } else {
+        console.error("Unexpected error", err);
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
+
+  if (loading) {
+    return <p>Loading challenges...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  return (
+    <div className="flex flex-col items-center min-h-screen p-4">
+      <Link href="/create-challenge">
+        <button className="bg-black text-white rounded-full px-4 py-2 mb-4">
+          Add Challenge
+        </button>
+      </Link>
+
+      <div className="grid grid-cols-1 gap-4 max-w-4xl w-full">
+        {challenges.map((challenge) => (
+          <div
+            key={challenge._id}
+            className="card bg-white shadow-md rounded-lg p-4"
+          >
+            <h2 className="text-xl font-bold mb-2">{challenge.title}</h2>
+            <p className="text-gray-700 mb-4">{challenge.description}</p>
+            <div className="text-sm">
+              <strong>Function:</strong> {challenge.functionName}
+            </div>
+            <div className="text-sm">
+              <strong>Parameters:</strong> {challenge.parameters}
+            </div>
+            <div className="text-sm">
+              <strong>Author:</strong> {challenge.author?.name || "Unknown"} {/* Display author's name */}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ChallengeCard;

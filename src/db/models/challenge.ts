@@ -27,16 +27,28 @@ export const getDb = async () => {
   return db;
 };
 
-export const getChallenges = async (): Promise<ChallengeModel[]> => {
+export const getChallenges = async () => {
   const db = await getDb();
-
-  const challenges = (await db
-    .collection(COLLECTION_NAME)
-    .find({})
-    .toArray()) as ChallengeModel[];
+  const challenges = await db.collection("Challenges").aggregate([
+    {
+      $lookup: {
+        from: "Users",
+        localField: "authorId", 
+        foreignField: "_id",
+        as: "author", 
+      },
+    },
+    {
+      $unwind: { 
+        path: "$author",
+        preserveNullAndEmptyArrays: true, 
+      },
+    },
+  ]).toArray();
 
   return challenges;
 };
+
 
 export const getChallengeById = async (_id: string) => {
   const db = await getDb();
