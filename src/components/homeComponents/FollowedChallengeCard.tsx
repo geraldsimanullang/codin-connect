@@ -23,7 +23,7 @@ const FollowedChallengeCard: React.FC = () => {
     try {
       const response = await fetch(`/api/followed-challenge`);
       console.log(response, " response di card muuuu <<<<<<<<< ");
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch challenges");
       }
@@ -58,7 +58,10 @@ const FollowedChallengeCard: React.FC = () => {
     <div className="flex flex-col items-center min-h-screen p-4 text-center">
       <div className="grid grid-cols-1 gap-4 max-w-4xl w-full">
         {challenges.length === 0 ? (
-          <p>No challenges found. You are not following anyone.</p>
+          <p>
+            No challenges created by your following user or you have not
+            followed any user
+          </p>
         ) : (
           challenges.map((challenge) => (
             <div
@@ -77,7 +80,7 @@ const FollowedChallengeCard: React.FC = () => {
         )}
       </div>
       <Link href="/global-challenges">
-        <button className="bg-black text-white rounded-full px-4 py-2 mb-4">
+        <button className="border-[1px] border-blue-700 text-blue-700 rounded-full px-4 py-2 mt-4 hover:bg-blue-700 hover:text-white">
           Go to Global Challenges
         </button>
       </Link>
