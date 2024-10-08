@@ -2,6 +2,7 @@
 
 import { ObjectId } from "mongodb";
 import { getMongoClientInstance } from "../config";
+import { getProfileById } from "./user";
 
 export type TestCaseModel = {
   input: string;
@@ -26,7 +27,9 @@ export const getDb = async () => {
   return client.db(DATABASE_NAME);
 };
 
-export const getChallengeById = async (id: string): Promise<ChallengeModel | null> => {
+export const getChallengeById = async (
+  id: string
+): Promise<ChallengeModel | null> => {
   const db = await getDb();
   const objectId = new ObjectId(id);
 
@@ -124,29 +127,86 @@ export const createNewChallenge = async (data: NewChallengeInput) => {
   }
 };
 
+export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
+  try {
+    const db = await getDb();
 
-// export const getChallengesByFollowing = async (userId: string) => {
-//   if (!userId) {
-//     throw new Error("User ID is required");
-//   }
+    // Mengubah string menjadi ObjectId
+    const arrayOfObjectIds = arrayOfIds.map((id) => new ObjectId(id));
 
-//   const db = await getDb(); 
+    const challenges = await db
+      .collection(COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: { authorId: { $in: arrayOfObjectIds } }, // Filter berdasarkan authorId
+        },
+        {
+          $lookup: {
+            from: "Users", // Nama koleksi Users
+            localField: "authorId", // Field dari Challenges yang digunakan untuk join
+            foreignField: "_id", // Field dari Users yang digunakan untuk join
+            as: "User", // Nama property baru yang akan menampung data User
+          },
+        },
+        {
+          $unwind: {
+            // Mengubah array User menjadi objek
+            path: "$User",
+            preserveNullAndEmptyArrays: true, // Menjaga agar dokumen tetap ada meskipun tidak ada User yang cocok
+          },
+        },
+      ])
+      .toArray();
 
-//   const following = await db
-//     .collection("Follows")
-//     .find({ followerId: new ObjectId(userId) })
-//     .toArray();
+    // return challenges;
+    return challenges.map((challenge) => ({
+      _id: challenge._id,
+      title: challenge.title,
+      description: challenge.description,
+      functionName: challenge.functionName,
+      parameters: challenge.parameters,
+      testCases: challenge.testCases,
+      author: challenge.User ? challenge.User.name : "Unknown", // Memastikan penulis terisi
+    }));
+  } catch (err) {
+    console.error("Error fetching challenges:", err);
+    return []; // Kembalikan array kosong jika terjadi error
+  }
+};
 
-//   console.log("Following data:", following);
+// Contoh tipe untuk Challenge dan Solution
+interface Challenge {
+  _id: string;
+}
 
-//   const followingIds = following.map((f) => f.followingId);
+interface Solution {
+  challenge: Challenge;
+}
 
-//   console.log("Following IDs:", followingIds);
+// Ubah fungsi sesuai dengan tipe tersebut
+export const getNextChallengeId = async (_id: string) => {
+  const db = await getDb();
 
-//   const challenges = await db
-//     .collection(COLLECTION_NAME)
-//     .find({ authorId: { $in: followingIds } })
-//     .toArray();
+  // Asumsikan fungsi ini mengembalikan objek yang sesuai dengan tipe yang benar
+  const fullProfile = await getProfileById(_id);
 
-//   return challenges; // Return the found challenges
-// };
+  // Menambahkan tipe data untuk userSolutions
+  const userSolutions: Solution[] | undefined = fullProfile?.userSolutions;
+
+  const userChallengeSolutionsId = userSolutions?.map(
+    (userSolution: Solution) => {
+      return userSolution.challenge._id;
+    }
+  );
+
+  const randomChallengeCursor = await db
+    .collection("Challenges")
+    .aggregate([
+      { $match: { _id: { $nin: userChallengeSolutionsId } } },
+      { $sample: { size: 1 } },
+    ]);
+
+  const randomChallenge = await randomChallengeCursor.next();
+
+  return randomChallenge?._id;
+};

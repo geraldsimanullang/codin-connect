@@ -259,7 +259,9 @@ const Profile = ({ params }: { params: { username: string } }) => {
                         key={solution._id}
                         className="mt-2 px-2 border-[0.5px] border-gray-200 rounded-md"
                       >
-                        <strong>{solution.challenge.title}</strong>
+                        <Link href={`/challenge/${solution.challenge._id}`}>
+                          <strong>{solution.challenge.title}</strong>
+                        </Link>
                         <p className="text-sm text-gray-700">
                           Language: {solution.language}
                         </p>{" "}
