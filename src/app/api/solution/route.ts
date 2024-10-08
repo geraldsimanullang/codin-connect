@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { createNewSolution } from "@/db/models/solution";
-=======
 import { createOrUpdateNewSolution } from "@/db/models/solution";
->>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
 import { readPayload } from "@/lib/jwt";
 
 export const POST = async (request: Request) => {
@@ -32,18 +28,10 @@ export const POST = async (request: Request) => {
     }
 
     const data = await request.json();
-<<<<<<< HEAD
 
     const { solution, challengeId, language } = data;
 
     if (!solution || !challengeId) {
-=======
-    console.log(data);
-
-    const { solution, challengeId, language } = data;
-
-    if (!solution || !challengeId || !language) {
->>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -53,11 +41,7 @@ export const POST = async (request: Request) => {
       );
     }
 
-<<<<<<< HEAD
-    const newSolution = await createNewSolution({
-=======
     const newSolution = await createOrUpdateNewSolution({
->>>>>>> c6a38a69ddc2a37e5aaf70fb362aeb2c3f75df22
       authorId: decodedPayload.id,
       challengeId,
       solution,
