@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ProfileServer from "./profileServer";
 import Link from "next/link";
 import Navbar from "@/components/homeComponents/Navbar";
 import Image from "next/image";
+import FollowButton from "@/components/FollowButton";
+import { ObjectId } from "mongodb";
+import ProfileServer from "../profileServer";
 
 interface User {
   name: string;
@@ -29,6 +31,7 @@ interface Solution {
 }
 
 interface Profile {
+  _id: ObjectId;
   name: string;
   username: string;
   following: User[];
@@ -37,31 +40,53 @@ interface Profile {
   userSolutions: Solution[];
 }
 
-const Profile = () => {
+const Profile = ({ params }: { params: { username: string } }) => {
   const [activeTab, setActiveTab] = useState("challenges");
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [ownProfile, setOwnProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const { username } = params;
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch(`/api/profile/${username}`);
+      if (!response.ok) {
+        throw new Error("Pengguna tidak ditemukan");
+      }
+      const fetchedProfile = await response.json();
+      setProfile(fetchedProfile);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const fetchedProfile = await ProfileServer();
-
-      setProfile(fetchedProfile as Profile);
-    };
     fetchProfile();
+  }, [username]);
+
+  useEffect(() => {
+    const fetchOwnProfile = async () => {
+      const fetchedOwnProfile = await ProfileServer();
+
+      setOwnProfile(fetchedOwnProfile as Profile);
+    };
+    fetchOwnProfile();
   }, []);
 
   const handleShowFollowing = () => {
     setShowFollowing((prev) => !prev);
-    setShowFollowers(false);
+    setShowFollowers(false); // Menutup followers jika following dibuka
   };
 
   const handleShowFollowers = () => {
     setShowFollowers((prev) => !prev);
-    setShowFollowing(false);
+    setShowFollowing(false); // Menutup following jika followers dibuka
   };
 
+  if (error) return <p>{error}</p>; // Menampilkan pesan kesalahan jika ada
   if (!profile)
     return (
       <div className="flex items-center justify-center min-h-screen flex-col">
@@ -72,7 +97,7 @@ const Profile = () => {
           height={0}
           style={{ height: "auto" }}
         />
-        <p className=" font-semibold text-gray-700">Fetching your profile...</p>
+        <p className=" font-semibold text-gray-700">Fetching user profile...</p>
       </div>
     );
 
@@ -94,7 +119,15 @@ const Profile = () => {
 
             {/* Nama dan Stats */}
             <div className="flex h-24 flex-grow justify-between items-center">
-              <h2 className="text-2xl font-bold">{profile.name}</h2>
+              <div className="flex gap-4 items-center">
+                <h2 className="text-2xl font-bold">{profile.name}</h2>
+                <FollowButton
+                  followUserId={profile._id.toString()}
+                  fetchProfile={fetchProfile}
+                  currentFollowers={profile.followers}
+                  ownId={ownProfile?._id.toString()}
+                />
+              </div>
 
               {/* Stats Section */}
               <div className="mt-2 flex space-x-8 pr-8">
@@ -193,7 +226,7 @@ const Profile = () => {
             {activeTab === "challenges" && (
               <div>
                 {profile.userChallenges.length === 0 ? (
-                  <p>{`You have not created any challenge`}</p>
+                  <p>{`${profile.name} has not created any challenge`}</p>
                 ) : (
                   <ul>
                     {profile.userChallenges.map((challenge) => (
@@ -216,7 +249,7 @@ const Profile = () => {
             {activeTab === "solutions" && (
               <div>
                 {profile?.userSolutions?.length === 0 ? (
-                  <p>{`You have not solved any challenge`}</p>
+                  <p>{`${profile.name} has not solved any challenge`}</p>
                 ) : (
                   <ul>
                     {profile?.userSolutions?.map((solution) => (

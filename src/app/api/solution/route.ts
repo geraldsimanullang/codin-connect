@@ -28,11 +28,10 @@ export const POST = async (request: Request) => {
     }
 
     const data = await request.json();
-    console.log(data);
 
     const { solution, challengeId, language } = data;
 
-    if (!solution || !challengeId || !language) {
+    if (!solution || !challengeId) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {

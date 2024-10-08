@@ -1,4 +1,4 @@
-const url = process.env.NEXT_PUBLIC_BASE_URL;
+const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export const getProfile = async (token: string) => {
   const response = await fetch(`${url}/api/profile`, {
@@ -14,5 +14,7 @@ export const getProfile = async (token: string) => {
   }
 
   const data = await response.json();
+  console.log(data);
+
   return data;
 };

@@ -1,5 +1,5 @@
-import Footer from "@/components/main/Footer";
-import Hero from "@/components/main/Hero";
+"use client";
+
 import NavbarComponent from "@/components/homeComponents/Navbar";
 import ChallengeCard from "@/components/homeComponents/ChallengeCard";
 import FollowedChallengeCard from "@/components/homeComponents/FollowedChallengeCard";
