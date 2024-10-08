@@ -5,6 +5,8 @@ import Link from "next/link";
 import Navbar from "@/components/homeComponents/Navbar";
 import Image from "next/image";
 import FollowButton from "@/components/FollowButton";
+import { ObjectId } from "mongodb";
+import ProfileServer from "../profileServer";
 
 interface User {
   name: string;
@@ -29,6 +31,7 @@ interface Solution {
 }
 
 interface Profile {
+  _id: ObjectId;
   name: string;
   username: string;
   following: User[];
@@ -42,25 +45,36 @@ const Profile = ({ params }: { params: { username: string } }) => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [ownProfile, setOwnProfile] = useState<Profile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const { username } = params;
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch(`/api/profile/${username}`);
-        if (!response.ok) {
-          throw new Error("Pengguna tidak ditemukan");
-        }
-        const fetchedProfile = await response.json();
-        setProfile(fetchedProfile);
-      } catch (err: any) {
-        setError(err.message);
-      }
-    };
 
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch(`/api/profile/${username}`);
+      if (!response.ok) {
+        throw new Error("Pengguna tidak ditemukan");
+      }
+      const fetchedProfile = await response.json();
+      setProfile(fetchedProfile);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, [username]);
+
+  useEffect(() => {
+    const fetchOwnProfile = async () => {
+      const fetchedOwnProfile = await ProfileServer();
+
+      setOwnProfile(fetchedOwnProfile as Profile);
+    };
+    fetchOwnProfile();
+  }, []);
 
   const handleShowFollowing = () => {
     setShowFollowing((prev) => !prev);
@@ -107,7 +121,12 @@ const Profile = ({ params }: { params: { username: string } }) => {
             <div className="flex h-24 flex-grow justify-between items-center">
               <div className="flex gap-4 items-center">
                 <h2 className="text-2xl font-bold">{profile.name}</h2>
-                <FollowButton />
+                <FollowButton
+                  followUserId={profile._id.toString()}
+                  fetchProfile={fetchProfile}
+                  currentFollowers={profile.followers}
+                  ownId={ownProfile?._id.toString()}
+                />
               </div>
 
               {/* Stats Section */}
