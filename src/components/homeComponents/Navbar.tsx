@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { logout } from "@/app/login/action";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Search from "./search";
 
 const NavbarComponent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -11,28 +12,31 @@ const NavbarComponent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError(null);
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
-
-    if (!searchQuery) {
-      setError("Please enter a username to search.");
-      setLoading(false);
-      return;
-    }
-
+    setError(null); // Clear previous error
     try {
-      const res = await fetch(`/api/user?username=${searchQuery}`);
-      const data = await res.json();
+      if (!searchQuery) {
+        setError("Please enter a username.");
+        setLoading(false);
+        return;
+      }
 
-      if (res.status === 200 && data.data) {
-        router.push(`/profile/${data.data.username}`);
+      const response = await fetch(`/api/user?username=${searchQuery}`, {
+        method: "GET",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push(`/profile/${searchQuery}`);
       } else {
+        console.error("Error response:", data); // Log the exact error from the API
         setError(data.message || "User not found.");
       }
     } catch (err) {
-      console.error("Failed to fetch user:", err);
+      console.error("Request failed:", err); // Log the error to the console
       setError("An error occurred while searching for the user.");
     } finally {
       setLoading(false);
@@ -58,7 +62,7 @@ const NavbarComponent: React.FC = () => {
       </div>
 
       {/* Search Form */}
-      <form
+      {/* <form
         onSubmit={handleSearch}
         className="flex w-full md:w-1/2 mt-4 md:mt-0"
       >
@@ -78,7 +82,8 @@ const NavbarComponent: React.FC = () => {
         >
           {loading ? "Searching..." : "Search"}
         </button>
-      </form>
+      </form> */}
+      <Search />
 
       {error && <p className="text-red-500 mt-2">{error}</p>}
 

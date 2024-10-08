@@ -67,34 +67,29 @@ export const POST = async (request: Request) => {
   }
 };
 
-export async function GET(request: NextRequest) {
-  const username = request.nextUrl.searchParams.get("username");
-
-  if (!username) {
-    return NextResponse.json(
-      { message: "Username is required", data: null },
-      { status: 400 }
-    );
-  }
-
+export async function GET(req: Request) {
   try {
-    const user = await searchUserByUsername(username);
+    const { searchParams } = new URL(req.url);
+    const username = searchParams.get("username");
 
-    if (!user) {
+    if (!username) {
       return NextResponse.json(
-        { message: "User not found", data: null },
-        { status: 404 }
+        { message: "Username is required" },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { message: "Success", data: user },
-      { status: 200 }
-    );
+    const user = await searchUserByUsername(username);
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("API error:", error); // Log the API error
     return NextResponse.json(
-      { message: "Internal Server Error", data: null },
+      { message: "An error occurred while searching for the user." },
       { status: 500 }
     );
   }
