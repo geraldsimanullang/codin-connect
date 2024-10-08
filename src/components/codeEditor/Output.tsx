@@ -5,6 +5,7 @@ import { executeCode } from "./api";
 import * as monaco from "monaco-editor";
 import { TestCaseModel } from "@/db/models/challenge";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -106,6 +107,21 @@ const Output: React.FC<OutputProps> = ({
     }
   };
 
+  const handleNextChallenge = async () => {
+    const response = await fetch("/api/next-challenge", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      const { nextChallengeId } = await response.json();
+      router.push(`/solve/${nextChallengeId}`);
+    }
+  };
+
   return (
     <div className="w-full p-6 bg-white shadow-md rounded-lg border border-gray-200">
       {/* Output Title */}
@@ -126,14 +142,21 @@ const Output: React.FC<OutputProps> = ({
         </button>
       ) : (
         <div className="w-full flex justify-end gap-3 py-3">
-          <button className="border-[1px] border-black px-4 py-1 rounded-md">
-            Back to Home
-          </button>
-          <button className="border-[1px] border-blue-700 text-blue-700 px-4 py-1 rounded-md">
-            Explore challenges
-          </button>
-          <button className="border-[1px] border-blue-500 text-white bg-blue-500 px-4 py-1 rounded-md">
-            Find random challenge
+          <Link href="/">
+            <button className="border-[1px] border-black px-4 py-1 rounded-md">
+              Back to Home
+            </button>
+          </Link>
+          <Link href="/global-challenges">
+            <button className="border-[1px] border-blue-700 text-blue-700 px-4 py-1 rounded-md">
+              Explore challenges
+            </button>
+          </Link>
+          <button
+            className="border-[1px] border-blue-500 text-white bg-blue-500 px-4 py-1 rounded-md"
+            onClick={handleNextChallenge}
+          >
+            Next challenge
           </button>
         </div>
       )}

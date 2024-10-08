@@ -1,6 +1,7 @@
 "use server";
 
 import { LANGUAGE_VERSIONS } from "./constans";
+import { cookies } from "next/headers";
 
 interface ExecuteCodeResponse {
   run: {

@@ -2,6 +2,7 @@
 
 import { ObjectId } from "mongodb";
 import { getMongoClientInstance } from "../config";
+import { getProfileById } from "./user";
 
 export type TestCaseModel = {
   input: string;
@@ -164,28 +165,39 @@ export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
   }
 };
 
-// export const getChallengesByFollowing = async (userId: string) => {
-//   if (!userId) {
-//     throw new Error("User ID is required");
-//   }
+// Contoh tipe untuk Challenge dan Solution
+interface Challenge {
+  _id: string;
+}
 
-//   const db = await getDb();
+interface Solution {
+  challenge: Challenge;
+}
 
-//   const following = await db
-//     .collection("Follows")
-//     .find({ followerId: new ObjectId(userId) })
-//     .toArray();
+// Ubah fungsi sesuai dengan tipe tersebut
+export const getNextChallengeId = async (_id: string) => {
+  const db = await getDb();
 
-//   console.log("Following data:", following);
+  // Asumsikan fungsi ini mengembalikan objek yang sesuai dengan tipe yang benar
+  const fullProfile = await getProfileById(_id);
 
-//   const followingIds = following.map((f) => f.followingId);
+  // Menambahkan tipe data untuk userSolutions
+  const userSolutions: Solution[] | undefined = fullProfile?.userSolutions;
 
-//   console.log("Following IDs:", followingIds);
+  const userChallengeSolutionsId = userSolutions?.map(
+    (userSolution: Solution) => {
+      return userSolution.challenge._id;
+    }
+  );
 
-//   const challenges = await db
-//     .collection(COLLECTION_NAME)
-//     .find({ authorId: { $in: followingIds } })
-//     .toArray();
+  const randomChallengeCursor = await db
+    .collection("Challenges")
+    .aggregate([
+      { $match: { _id: { $nin: userChallengeSolutionsId } } },
+      { $sample: { size: 1 } },
+    ]);
 
-//   return challenges; // Return the found challenges
-// };
+  const randomChallenge = await randomChallengeCursor.next();
+
+  return randomChallenge?._id;
+};
