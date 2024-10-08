@@ -66,3 +66,5 @@ export const getFollowing = async (userId: string) => {
 
   return following.map((follow) => follow.followingId);
 };
+
+
