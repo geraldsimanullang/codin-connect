@@ -150,7 +150,7 @@ const Output: React.FC<OutputProps> = ({
           output.map((line, index) => (
             <div
               key={index}
-              className={`whitespace-pre-wrap p-3 mb-3 rounded-xl border-2 ${
+              className={`whitespace-pre-wrap p-3 mb-3 rounded-xl border-2 font-title ${
                 line.includes("passed")
                   ? "border-green-500 text-green-700"
                   : "border-red-500 text-red-700"

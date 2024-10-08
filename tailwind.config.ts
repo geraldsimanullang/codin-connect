@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        title: ["Space-Mono", "sans-serif"],
+        title: ["Space Mono", "sans-serif"],
       },
       colors: {
         background: "var(--background)",
