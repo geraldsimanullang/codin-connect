@@ -114,7 +114,7 @@ const Output: React.FC<OutputProps> = ({
       {/* Button */}
       {!isSolved ? (
         <button
-          className={`w-full px-4 py-2 rounded-lg font-medium transition ${
+          className={`w-full px-4 py-2 rounded-lg font-medium transition my-3 ${
             isLoading
               ? "bg-gray-400 text-gray-100 cursor-not-allowed"
               : "border bg-blue-500 text-white hover:bg-blue-600"
@@ -161,7 +161,7 @@ const Output: React.FC<OutputProps> = ({
           ))
         ) : (
           <p className="text-gray-500 italic">
-            Click "Attempt" to see the test case
+            Click "Attempt" to test your solution
           </p>
         )}
       </div>
