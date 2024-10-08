@@ -52,6 +52,13 @@ export const getUserByUsername = async (username: string) => {
   return user;
 };
 
+export const searchUserByUsername = async (username: string) => {
+  const db = await getDb();
+  const user = await db.collection("Users").findOne({ username });
+
+  return user;
+};
+
 export const getProfileByUsername = async (username: string) => {
   const db = await getDb();
   const pipeline = [
