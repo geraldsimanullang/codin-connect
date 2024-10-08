@@ -144,7 +144,7 @@ const Output: React.FC<OutputProps> = ({
             </p>
           ))
         ) : (
-          <p>Click "Run Code" to see the output here</p>
+          <p>Click "Attempt" to see the test case</p>
         )}
       </div>
     </div>
