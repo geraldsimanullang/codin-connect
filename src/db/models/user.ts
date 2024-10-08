@@ -61,8 +61,9 @@ export const searchUserByUsername = async (username: string) => {
 
 export const getProfileByUsername = async (username: string) => {
   const db = await getDb();
+
   const pipeline = [
-    { $match: { username: username } },
+    { $match: { username } },
 
     {
       $lookup: {
@@ -96,13 +97,38 @@ export const getProfileByUsername = async (username: string) => {
         as: "followerDetails",
       },
     },
-
     {
       $lookup: {
         from: "Users",
         localField: "following.followingId",
         foreignField: "_id",
         as: "followingDetails",
+      },
+    },
+
+    {
+      $lookup: {
+        from: "Challenges",
+        localField: "_id",
+        foreignField: "authorId",
+        as: "userChallenges",
+      },
+    },
+    {
+      $lookup: {
+        from: "Solutions",
+        localField: "_id",
+        foreignField: "authorId",
+        as: "userSolutions",
+      },
+    },
+
+    {
+      $lookup: {
+        from: "Challenges",
+        localField: "userSolutions.challengeId",
+        foreignField: "_id",
+        as: "challengeDetails",
       },
     },
 
@@ -136,11 +162,66 @@ export const getProfileByUsername = async (username: string) => {
             },
           },
         },
+
+        userChallenges: {
+          $map: {
+            input: "$userChallenges",
+            as: "challenge",
+            in: {
+              _id: "$$challenge._id",
+              title: "$$challenge.title",
+              description: "$$challenge.description",
+              functionName: "$$challenge.functionName",
+              parameters: "$$challenge.parameters",
+              testCases: "$$challenge.testCases",
+              solutions: {
+                $filter: {
+                  input: "$solutions",
+                  as: "solution",
+                  cond: { $eq: ["$$solution.challengeId", "$$challenge._id"] },
+                },
+              },
+            },
+          },
+        },
+
+        userSolutions: {
+          $map: {
+            input: "$userSolutions",
+            as: "solution",
+            in: {
+              _id: "$$solution._id",
+              language: "$$solution.language",
+              solution: "$$solution.solution",
+
+              challenge: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: "$challengeDetails",
+                      as: "challengeDetail",
+                      cond: {
+                        $eq: [
+                          "$$challengeDetail._id",
+                          "$$solution.challengeId",
+                        ],
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+            },
+          },
+        },
       },
     },
   ];
 
-  const user = await db.collection("Users").aggregate(pipeline).toArray();
+  const user = await db
+    .collection(COLLECTION_NAME)
+    .aggregate(pipeline)
+    .toArray();
 
   if (!user || user.length === 0) {
     return null;
@@ -227,7 +308,6 @@ export const getProfileById = async (_id: string) => {
       },
     },
 
-    // Tambahkan lookup untuk mendapatkan detail challenge berdasarkan challengeId di userSolutions
     {
       $lookup: {
         from: "Challenges",
