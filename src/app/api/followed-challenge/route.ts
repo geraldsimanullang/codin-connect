@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { readPayload } from "@/lib/jwt";
-import { getChallenges } from "@/db/models/challenge"; 
-import { getProfileById } from "@/db/models/user"; 
+import { getChallenges, getChallengesByFollowing } from "@/db/models/challenge";
+import { getProfileById } from "@/db/models/user";
+import { ObjectId } from "mongodb";
 
 type FollowingType = {
-  _id: string; 
+  _id: ObjectId;
 };
 
 export const GET = async (request: Request) => {
@@ -28,29 +29,28 @@ export const GET = async (request: Request) => {
 
     const userId = decodedPayload?.id;
     const userProfile = await getProfileById(userId);
-    
+
     if (!userProfile) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     console.log(userProfile.following, "<<<<< following data");
-    
-    const followingIds: string[] = (userProfile.following as FollowingType[]).map((following) => following._id);
+
+    const followingIds: string[] = (
+      userProfile.following as FollowingType[]
+    ).map((following) => following._id.toString());
     console.log(followingIds, "<<<<< following IDs");
 
-    const allChallenges = await getChallenges();
-    console.log(allChallenges, "<<<<< all challenges");
-
-    const userChallenges = allChallenges.filter(challenge => 
-      challenge.authorId === userId || followingIds.includes(challenge.authorId)
-    );
+    const userChallenges = await getChallengesByFollowing(followingIds);
 
     console.log(userChallenges, "<<<<<< challenges that you follow");
-    
-    return NextResponse.json(userChallenges, { status: 200 });
 
+    return NextResponse.json(userChallenges, { status: 200 });
   } catch (error) {
     console.error("Error fetching following challenges:", error);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 };
