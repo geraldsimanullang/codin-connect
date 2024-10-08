@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ProfileServer from "./profileServer";
 import Link from "next/link";
 import Navbar from "@/components/homeComponents/Navbar";
+import Image from "next/image";
 
 interface User {
   name: string;
@@ -61,7 +62,19 @@ const Profile = () => {
     setShowFollowing(false);
   };
 
-  if (!profile) return <p>Loading...</p>;
+  if (!profile)
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col">
+        <Image
+          src="/loading.svg"
+          alt=""
+          width={100}
+          height={0}
+          style={{ height: "auto" }}
+        />
+        <p className=" font-semibold text-gray-700">Fetching your profile...</p>
+      </div>
+    );
 
   return (
     <>
@@ -69,38 +82,52 @@ const Profile = () => {
       <div className="flex">
         <main className="flex-1 p-8">
           {/* Profile Section */}
-          <div className="flex items-start mb-8 gap-6">
-            <div>
-              <h2 className="text-xl font-bold">{profile.name}</h2>
+          <div className="flex items-center mb-8 gap-6">
+            <div className="w-24 h-24 border-[0.5px] border-gray-300 rounded-md bg-gray-100">
+              {/* Placeholder for user photo */}
+              <img
+                src="/default-avatar.jpg"
+                alt="Profile Photo"
+                className="w-full h-full object-cover rounded-md"
+              />
             </div>
-          </div>
 
-          {/* Stats Section */}
-          <div className="border-t border-gray-200 pt-6">
-            <div className="grid grid-cols-4 text-center gap-6">
-              <div className="">
-                <div className="text-3xl font-bold">
-                  {profile.userChallenges.length}
+            {/* Nama dan Stats */}
+            <div className="flex h-24 flex-grow justify-between items-center">
+              <h2 className="text-2xl font-bold">{profile.name}</h2>
+
+              {/* Stats Section */}
+              <div className="mt-2 flex space-x-8 pr-8">
+                <div className="text-center">
+                  <div className="font-semibold">
+                    {profile.userChallenges.length}
+                  </div>
+                  <div>Challenges</div>
                 </div>
-                <div className="text-gray-600">Challenges</div>
-              </div>
-              <div className="">
-                <div className="text-3xl font-bold">
-                  {profile.userSolutions?.length || "0"}
+                <div className="text-center">
+                  <div className="font-semibold">
+                    {profile.userSolutions?.length || "0"}
+                  </div>
+                  <div>Solutions</div>
                 </div>
-                <div className="text-gray-600">Solutions</div>
-              </div>
-              <div onClick={handleShowFollowing} className="cursor-pointer">
-                <div className="text-3xl font-bold">
-                  {profile.following.length}
+                <div
+                  onClick={handleShowFollowing}
+                  className="cursor-pointer text-center"
+                >
+                  <div className="font-semibold">
+                    {profile.following.length}
+                  </div>
+                  <div>Following</div>
                 </div>
-                <div className="text-gray-600">Following</div>
-              </div>
-              <div onClick={handleShowFollowers} className="cursor-pointer">
-                <div className="text-3xl font-bold">
-                  {profile.followers.length}
+                <div
+                  onClick={handleShowFollowers}
+                  className="cursor-pointer text-center"
+                >
+                  <div className="font-semibold">
+                    {profile.followers.length}
+                  </div>
+                  <div>Followers</div>
                 </div>
-                <div className="text-gray-600">Followers</div>
               </div>
             </div>
           </div>
@@ -166,7 +193,7 @@ const Profile = () => {
             {activeTab === "challenges" && (
               <div>
                 {profile.userChallenges.length === 0 ? (
-                  <p>No challenges found</p>
+                  <p>{`You have not created any challenge`}</p>
                 ) : (
                   <ul>
                     {profile.userChallenges.map((challenge) => (
@@ -189,7 +216,7 @@ const Profile = () => {
             {activeTab === "solutions" && (
               <div>
                 {profile?.userSolutions?.length === 0 ? (
-                  <p>No solutions found</p>
+                  <p>{`You have not solved any challenge`}</p>
                 ) : (
                   <ul>
                     {profile?.userSolutions?.map((solution) => (
