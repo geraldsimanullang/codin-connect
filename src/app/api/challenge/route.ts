@@ -29,6 +29,7 @@ export const GET = async (request: Request) => {
 
     const challenges = await getChallenges();
 
+
     return new Response(JSON.stringify(challenges), {
       status: 200,
       headers: { "Content-Type": "application/json" },

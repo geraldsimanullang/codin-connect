@@ -11,7 +11,6 @@ interface Challenge {
   authorId: string;
   author?: {
     name: string;
-    // username:
   };
   testCases: Array<{
     input: string;
