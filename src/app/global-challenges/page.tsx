@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import NavbarComponent from "@/components/homeComponents/Navbar";
+import Image from "next/image"; // Import Image for loading spinner
 
 interface Challenge {
   _id: string;
@@ -53,9 +54,15 @@ const ChallengeCard: React.FC = () => {
 
   if (loading) {
     return (
-      <p className="flex flex-col items-center min-h-screen p-4">
-        Loading challenges...
-      </p>
+      <div className="flex items-center justify-center min-h-screen flex-col">
+        <Image
+          src="/loading.svg" // Make sure to use the correct path to your loading image
+          alt="Loading..."
+          width={100}
+          height={100}
+        />
+        <p className="font-semibold text-gray-700">Loading challenges...</p>
+      </div>
     );
   }
 
@@ -66,19 +73,17 @@ const ChallengeCard: React.FC = () => {
   return (
     <>
       <NavbarComponent />
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-
-        <h1 className="text-3xl font-bold text-black">Global challenges</h1>
-
-        <div className="flex justify-start w-full max-w-4xl mb-4">
+      <div className="flex flex-col min-h-screen p-4 bg-gray-100">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-black">Global challenges</h1>
           <Link href="/create-challenge">
-            <button className="bg-black text-white rounded px-6 py-3 shadow-md">
+            <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
               Add Challenge
             </button>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 max-w-4xl w-full mx-auto">
+        <div className="grid grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto mt-2">
           {challenges.map((challenge) => (
             <div
               key={challenge._id}

@@ -7,7 +7,7 @@ import FollowedChallengeCard from "@/components/homeComponents/FollowedChallenge
 const Home: React.FC = () => {
   return (
     <div className="h-full w-full">
-      <div className="flex flex-col gap-0"> {/* Set gap to 0 to eliminate space between elements */}
+      <div className="flex flex-col gap-0"> 
         <NavbarComponent />
         <FollowedChallengeCard />
         {/* <Hero /> */}

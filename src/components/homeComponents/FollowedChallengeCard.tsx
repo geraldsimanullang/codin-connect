@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // Pastikan untuk mengimpor Image
 
 interface Challenge {
   _id: string;
@@ -47,7 +48,12 @@ const FollowedChallengeCard: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center">Loading challenges...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col">
+        <Image src="/loading.svg" alt="loading" width={100} height={100} />
+        <p className="font-semibold text-gray-700">Loading challenges...</p>
+      </div>
+    );
   }
 
   if (error) {
@@ -55,19 +61,23 @@ const FollowedChallengeCard: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className="text-3xl font-bold text-black">Feeds</h1>
+    <div className="flex flex-col min-h-screen bg-gray-100 py-2 px-2">
+      <h1 className="text-2xl  font-bold text-black">Feeds</h1>
 
-      <div className="grid grid-cols-1 gap-4 max-w-4xl w-full mx-auto mt-4">
+      <div className="grid grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto mt-2">
         {challenges.length === 0 ? (
-          <>
-            <p>No challenges created by your followed users.</p>
-            <Link href="/global-challenges">
-              <button className="bg-black text-white rounded px-6 py-3 shadow-md mt-6 mb-6">
-                Go to Global Challenges
-              </button>
-            </Link>
-          </>
+          <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="text-center">
+              <p className="text-lg text-gray-700 mb-4">
+                No challenges created by your followed users.
+              </p>
+              <Link href="/global-challenges">
+                <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
+                  Go to Global Challenges
+                </button>
+              </Link>
+            </div>
+          </div>
         ) : (
           challenges.map((challenge) => (
             <div
@@ -80,8 +90,7 @@ const FollowedChallengeCard: React.FC = () => {
                 </h2>
               </Link>
               <div className="text-sm text-gray-600 mb-2">
-                <strong>{challenge.author || "Unknown"}</strong>{" "}
-                {/* Menampilkan nama penulis */}
+                <strong>{challenge.author || "Unknown"}</strong>
               </div>
               <p className="text-gray-700 mb-4">{challenge.description}</p>
             </div>
