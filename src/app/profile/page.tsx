@@ -19,12 +19,20 @@ interface Challenge {
   testCases: string[];
 }
 
+interface Solution {
+  _id: string;
+  solution: string;
+  language: string;
+  createdAt: string;
+}
+
 interface Profile {
   name: string;
   username: string;
   following: User[];
   followers: User[];
-  userChallenges: Challenge[]; // Tambahkan ini
+  userChallenges: Challenge[];
+  userSolutions: Solution[];
 }
 
 const Profile = () => {
@@ -137,6 +145,23 @@ const Profile = () => {
               </ul>
             )}
           </div>
+
+          <div className="mt-8">
+  <h3 className="text-xl font-bold">User Solutions</h3>
+  {profile?.userSolutions?.length === 0 ? (
+    <p>No solutions found</p>
+  ) : (
+    <ul>
+      {profile?.userSolutions?.map((solution) => (
+        <li key={solution._id} className="text-gray-600 mt-2">
+          <strong>Solution (Language: {solution.language}):</strong> <br />
+          <pre>{solution.solution}</pre>
+          <p><strong>Submitted on:</strong> {new Date(solution.createdAt).toLocaleDateString()}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
         </main>
       </div>
     </>
