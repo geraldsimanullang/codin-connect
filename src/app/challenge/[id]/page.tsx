@@ -97,7 +97,7 @@ export default function Challenge() {
             height={0}
             style={{ height: "auto" }}
           />
-          <p className=" font-semibold text-gray-700">Loading challanges...</p>
+          <p className=" font-semibold text-gray-700">Loading challanges....</p>
         </div>
       )}
     </>
