@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import React, { useState } from "react";
 import { logout } from "@/app/login/action";
@@ -17,7 +17,7 @@ const NavbarComponent: React.FC = () => {
   return (
     <div className="bg-white h-20 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between shadow-lg border backdrop-blur-md z-50 shadow-md">
       {/* Logo */}
-      <div className="flex items-center">
+      <div className="flex items-center mb-4 md:mb-0">
         <Image
           src="/logo-coding-connect.png"
           alt="Logo"
@@ -31,7 +31,7 @@ const NavbarComponent: React.FC = () => {
       <Search />
 
       {/* Navigation */}
-      <div className="flex mt-4 md:mt-0 space-x-4 md:space-x-8">
+      <div className="flex space-x-4 md:space-x-8 items-center">
         <Link href="/">
           <span className="cursor-pointer transition-all hover:text-blue-600">
             Home
