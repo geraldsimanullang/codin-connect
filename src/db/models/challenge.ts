@@ -158,7 +158,16 @@ export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
       ])
       .toArray();
 
-    return challenges;
+    // return challenges;
+    return challenges.map((challenge) => ({
+      _id: challenge._id,
+      title: challenge.title,
+      description: challenge.description,
+      functionName: challenge.functionName,
+      parameters: challenge.parameters,
+      testCases: challenge.testCases,
+      author: challenge.User ? challenge.User.name : "Unknown", // Memastikan penulis terisi
+    }));
   } catch (err) {
     console.error("Error fetching challenges:", err);
     return []; // Kembalikan array kosong jika terjadi error
