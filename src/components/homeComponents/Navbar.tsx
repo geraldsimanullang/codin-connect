@@ -7,41 +7,7 @@ import { useRouter } from "next/navigation";
 import Search from "./search";
 
 const NavbarComponent: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null); // Clear previous error
-    try {
-      if (!searchQuery) {
-        setError("Please enter a username.");
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch(`/api/user?username=${searchQuery}`, {
-        method: "GET",
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push(`/profile/${searchQuery}`);
-      } else {
-        console.error("Error response:", data); // Log the exact error from the API
-        setError(data.message || "User not found.");
-      }
-    } catch (err) {
-      console.error("Request failed:", err); // Log the error to the console
-      setError("An error occurred while searching for the user.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -61,31 +27,8 @@ const NavbarComponent: React.FC = () => {
         />
       </div>
 
-      {/* Search Form */}
-      {/* <form
-        onSubmit={handleSearch}
-        className="flex w-full md:w-1/2 mt-4 md:mt-0"
-      >
-        <input
-          type="text"
-          placeholder="Search User?"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className={`ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 ${
-            loading ? "opacity-50" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Searching..." : "Search"}
-        </button>
-      </form> */}
+      {/* Search Component */}
       <Search />
-
-      {error && <p className="text-red-500 mt-2">{error}</p>}
 
       {/* Navigation */}
       <div className="flex mt-4 md:mt-0 space-x-4 md:space-x-8">
