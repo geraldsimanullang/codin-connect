@@ -9,8 +9,7 @@ const Home: React.FC = () => {
       <div className="flex flex-col gap-56">
         <NavbarComponent />
         {/* <Hero /> */}
-        <FollowedChallengeCard/>
-        {/* <Footer /> */}
+        <FollowedChallengeCard />
       </div>
     </div>
   );
