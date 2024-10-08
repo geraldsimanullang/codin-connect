@@ -26,6 +26,7 @@ const Output: React.FC<OutputProps> = ({
   const [output, setOutput] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [isSolved, setIsSolved] = useState<boolean>(false);
   const router = useRouter();
 
   const runCode = async () => {
@@ -93,9 +94,8 @@ const Output: React.FC<OutputProps> = ({
           throw new Error("Failed to submit the solution");
         }
 
-        const data = await response.json();
-        console.log("Solution submitted successfully:", data);
-        router.push(`/profile`);
+        await response.json();
+        setIsSolved(true);
       }
     } catch (error: any) {
       console.log(error);
@@ -109,42 +109,60 @@ const Output: React.FC<OutputProps> = ({
   return (
     <div className="w-full p-6 bg-white shadow-md rounded-lg border border-gray-200">
       {/* Output Title */}
-      <p className="mb-4 text-xl font-semibold text-gray-700">Output</p>
+      <p className="text-xl font-semibold text-gray-700">Output</p>
 
-      {/* Run Code Button */}
-      <button
-        className={`mb-6 w-full px-4 py-2 rounded-lg font-medium transition ${
-          isLoading
-            ? "bg-gray-400 text-gray-100 cursor-not-allowed"
-            : "border border-[#004aad] text-[#004aad] bg-white hover:bg-[#004aad] hover:text-white"
-        }`}
-        onClick={runCode}
-        disabled={isLoading}
-      >
-        {isLoading ? "Attempting..." : "Attempt"}
-      </button>
+      {/* Button */}
+      {!isSolved ? (
+        <button
+          className={`w-full px-4 py-2 rounded-lg font-medium transition my-3 ${
+            isLoading
+              ? "bg-gray-400 text-gray-100 cursor-not-allowed"
+              : "border bg-blue-500 text-white hover:bg-blue-600"
+          }`}
+          onClick={runCode}
+          disabled={isLoading}
+        >
+          {isLoading ? "Attempting..." : "Attempt"}
+        </button>
+      ) : (
+        <div className="w-full flex justify-end gap-3 py-3">
+          <button className="border-[1px] border-black px-4 py-1 rounded-md">
+            Back to Home
+          </button>
+          <button className="border-[1px] border-blue-700 text-blue-700 px-4 py-1 rounded-md">
+            Explore challenges
+          </button>
+          <button className="border-[1px] border-blue-500 text-white bg-blue-500 px-4 py-1 rounded-md">
+            Find random challenge
+          </button>
+        </div>
+      )}
 
       {/* Output Display */}
       <div
         className={`min-h-[150px] p-4 rounded-lg overflow-auto transition border ${
           isError
-            ? "border-red-500 bg-red-50 text-red-600"
-            : "border-gray-300 bg-gray-100 text-gray-800"
+            ? "border-red-500 text-red-600"
+            : "border-gray-300 text-gray-800"
         }`}
       >
         {output && output.length > 0 ? (
           output.map((line, index) => (
-            <p
+            <div
               key={index}
-              className={`whitespace-pre-wrap ${
-                line.includes("passed") ? "text-green-700" : "text-red-700"
+              className={`whitespace-pre-wrap p-3 mb-3 rounded-xl border-2 ${
+                line.includes("passed")
+                  ? "border-green-500 text-green-700"
+                  : "border-red-500 text-red-700"
               }`}
             >
               {line}
-            </p>
+            </div>
           ))
         ) : (
-          <p>Click "Run Code" to see the output here</p>
+          <p className="text-gray-500 italic">
+            Click "Attempt" to test your solution
+          </p>
         )}
       </div>
     </div>

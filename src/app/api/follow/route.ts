@@ -1,19 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { followUser } from "@/db/models/follow";
 import { readPayload } from "@/lib/jwt";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("Authorization");
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const tokenCookie = request.cookies.get("token");
+    const token = tokenCookie ? tokenCookie.value : null;
+    if (!token) {
       return NextResponse.json(
         { error: "Token tidak ditemukan" },
         { status: 401 }
       );
     }
-
-    const token = authHeader.split(" ")[1];
 
     const payload = readPayload(token);
     const userId = payload.id;
@@ -21,18 +19,21 @@ export async function POST(request: Request) {
     const { followUserId } = await request.json();
 
     if (!followUserId) {
-      return NextResponse.json({ error: "userId dan followersId os required" });
+      return NextResponse.json(
+        { error: "userId dan followUserId diperlukan" },
+        { status: 400 }
+      );
     }
 
     await followUser(userId, followUserId);
 
     return NextResponse.json(
-      { message: "Successfully followed user" },
+      { message: "Berhasil mengikuti pengguna" },
       { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
-      { error: "error occurred while processing the request" },
+      { error: "Terjadi kesalahan saat memproses permintaan" },
       { status: 500 }
     );
   }
