@@ -1,6 +1,7 @@
 import { doRegister } from "@/db/models/user";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { searchUserByUsername } from "@/db/models/user";
 
 type Myresponse<T> = {
   statusCode: number;
@@ -65,3 +66,36 @@ export const POST = async (request: Request) => {
     );
   }
 };
+
+export async function GET(request: NextRequest) {
+  const username = request.nextUrl.searchParams.get("username");
+
+  if (!username) {
+    return NextResponse.json(
+      { message: "Username is required", data: null },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const user = await searchUserByUsername(username);
+
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found", data: null },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Success", data: user },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error", data: null },
+      { status: 500 }
+    );
+  }
+}
