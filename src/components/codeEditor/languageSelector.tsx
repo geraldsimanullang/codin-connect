@@ -21,24 +21,24 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
   return (
     <div className="ml-2 mb-4">
-      <p className="mb-2 text-lg">Language:</p>
-      <div className="relative">
+      <div className="flex items-center mb-2">
+        <p className="text-lg mr-4">Select language:</p>
         <button
-          className="bg-gray-800 text-white py-2 px-4 rounded-md focus:outline-none"
+          className="border-[1px] border-black text-black bg-white text-sm py-2 px-4 rounded-md focus:outline-none"
           onClick={toggleDropdown}
         >
           {language}
         </button>
+      </div>
+      <div className="relative">
         {isOpen && (
-          <div className="absolute mt-1 w-full bg-gray-900 rounded-md shadow-lg z-10">
+          <div className="absolute mt-1 w-full rounded-md shadow-lg z-10">
             {languages.map(([lang, version]) => (
               <button
                 key={lang}
-                className={`flex justify-between w-full px-4 py-2 text-left text-sm ${
-                  lang === language
-                    ? `${ACTIVE_COLOR} bg-gray-900`
-                    : "text-white"
-                } hover:bg-gray-700`}
+                className={`flex bg-white justify-between w-full px-4 py-2 text-left text-sm ${
+                  lang === language ? `${ACTIVE_COLOR}` : "text-black"
+                } hover:bg-slate-100`}
                 onClick={() => {
                   onSelect(lang);
                   setIsOpen(false); // Close dropdown after selection

@@ -42,7 +42,7 @@ export default function Solve() {
   };
 
   const getChallange = async () => {
-    const challenge = await getChallengeById(id);
+    const challenge = (await getChallengeById(id)) as ChallengeModel;
     setChallenge(challenge);
   };
 
