@@ -1,6 +1,6 @@
 "use server";
 
-import { Db, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getMongoClientInstance } from "../config";
 
 export type TestCaseModel = {
@@ -15,7 +15,7 @@ export type ChallengeModel = {
   functionName: string;
   parameters: string;
   testCases: TestCaseModel[];
-  author: string
+  author: string;
 };
 
 const DATABASE_NAME = process.env.DATABASE_NAME;
@@ -30,35 +30,39 @@ export const getChallengeById = async (id: string): Promise<ChallengeModel | nul
   const db = await getDb();
   const objectId = new ObjectId(id);
 
-  const challenge = await db.collection(COLLECTION_NAME).aggregate([
-    { $match: { _id: objectId } },
-    {
-      $lookup: {
-        from: "Users", // Nama koleksi untuk penulis
-        localField: "authorId",
-        foreignField: "_id",
-        as: "author", // Nama field untuk menyimpan data penulis
+  const challenge = await db
+    .collection(COLLECTION_NAME)
+    .aggregate([
+      { $match: { _id: objectId } },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
       },
-    },
-    {
-      $unwind: {
-        path: "$author",
-        preserveNullAndEmptyArrays: true, // Jika tidak ada penulis, tetap tampilkan tantangan
+      {
+        $unwind: {
+          path: "$author",
+          preserveNullAndEmptyArrays: true,
+        },
       },
-    },
-  ]).toArray();
+    ])
+    .toArray();
 
-  return challenge.length > 0 ? {
-    _id: challenge[0]._id,
-    title: challenge[0].title,
-    description: challenge[0].description,
-    functionName: challenge[0].functionName,
-    parameters: challenge[0].parameters,
-    testCases: challenge[0].testCases,
-    author: challenge[0].author.name, // Ganti 'name' dengan field yang sesuai dari koleksi Users
-  } : null; 
+  return challenge.length > 0
+    ? {
+        _id: challenge[0]._id,
+        title: challenge[0].title,
+        description: challenge[0].description,
+        functionName: challenge[0].functionName,
+        parameters: challenge[0].parameters,
+        testCases: challenge[0].testCases,
+        author: challenge[0].author.name,
+      }
+    : null;
 };
-
 
 export interface NewChallengeInput {
   authorId: string;
@@ -119,3 +123,30 @@ export const createNewChallenge = async (data: NewChallengeInput) => {
     throw error;
   }
 };
+
+
+// export const getChallengesByFollowing = async (userId: string) => {
+//   if (!userId) {
+//     throw new Error("User ID is required");
+//   }
+
+//   const db = await getDb(); 
+
+//   const following = await db
+//     .collection("Follows")
+//     .find({ followerId: new ObjectId(userId) })
+//     .toArray();
+
+//   console.log("Following data:", following);
+
+//   const followingIds = following.map((f) => f.followingId);
+
+//   console.log("Following IDs:", followingIds);
+
+//   const challenges = await db
+//     .collection(COLLECTION_NAME)
+//     .find({ authorId: { $in: followingIds } })
+//     .toArray();
+
+//   return challenges; // Return the found challenges
+// };
