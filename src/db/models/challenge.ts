@@ -26,7 +26,9 @@ export const getDb = async () => {
   return client.db(DATABASE_NAME);
 };
 
-export const getChallengeById = async (id: string): Promise<ChallengeModel | null> => {
+export const getChallengeById = async (
+  id: string
+): Promise<ChallengeModel | null> => {
   const db = await getDb();
   const objectId = new ObjectId(id);
 
@@ -124,13 +126,50 @@ export const createNewChallenge = async (data: NewChallengeInput) => {
   }
 };
 
+export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
+  try {
+    const db = await getDb();
+
+    // Mengubah string menjadi ObjectId
+    const arrayOfObjectIds = arrayOfIds.map((id) => new ObjectId(id));
+
+    const challenges = await db
+      .collection(COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: { authorId: { $in: arrayOfObjectIds } }, // Filter berdasarkan authorId
+        },
+        {
+          $lookup: {
+            from: "Users", // Nama koleksi Users
+            localField: "authorId", // Field dari Challenges yang digunakan untuk join
+            foreignField: "_id", // Field dari Users yang digunakan untuk join
+            as: "User", // Nama property baru yang akan menampung data User
+          },
+        },
+        {
+          $unwind: {
+            // Mengubah array User menjadi objek
+            path: "$User",
+            preserveNullAndEmptyArrays: true, // Menjaga agar dokumen tetap ada meskipun tidak ada User yang cocok
+          },
+        },
+      ])
+      .toArray();
+
+    return challenges;
+  } catch (err) {
+    console.error("Error fetching challenges:", err);
+    return []; // Kembalikan array kosong jika terjadi error
+  }
+};
 
 // export const getChallengesByFollowing = async (userId: string) => {
 //   if (!userId) {
 //     throw new Error("User ID is required");
 //   }
 
-//   const db = await getDb(); 
+//   const db = await getDb();
 
 //   const following = await db
 //     .collection("Follows")
