@@ -47,7 +47,7 @@ const NavbarComponent: React.FC = () => {
   return (
     <div className="bg-white h-20 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between shadow-lg border backdrop-blur-md z-50 shadow-md">
       {/* Logo */}
-      <div className="flex items-center">
+      <div className="flex items-center mb-4 md:mb-0">
         <Image
           src="/logo-coding-connect.png"
           alt="Logo"
@@ -60,7 +60,7 @@ const NavbarComponent: React.FC = () => {
       {/* Search Form */}
       <form
         onSubmit={handleSearch}
-        className="flex w-full md:w-1/2 mt-4 md:mt-0"
+        className="flex flex-grow items-center w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"
       >
         <input
           type="text"
@@ -83,7 +83,7 @@ const NavbarComponent: React.FC = () => {
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
       {/* Navigation */}
-      <div className="flex mt-4 md:mt-0 space-x-4 md:space-x-8">
+      <div className="flex space-x-4 md:space-x-8 items-center">
         <Link href="/">
           <span className="cursor-pointer transition-all hover:text-blue-600">
             Home
