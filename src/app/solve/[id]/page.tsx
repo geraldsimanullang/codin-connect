@@ -107,6 +107,7 @@ export default function Solve() {
                 editorRef={editorRef}
                 language={language}
                 functionName={challenge.functionName}
+                challengeId={challenge._id.toString()}
                 testCases={challenge.testCases}
               />
             </div>

@@ -1,86 +1,83 @@
-"use client";
+
+"use client"; 
 
 import { useState, useEffect } from "react";
 import { LuBadgeCheck, LuBell } from "react-icons/lu";
-import ProfileServer from "./profileServer";
 import Link from "next/link";
+
 
 interface User {
   name: string;
   username: string;
 }
 
-interface Challenge {
-  _id: string;
-  title: string;
-  description: string;
-  functionName: string;
-  parameters: string;
-  testCases: string[];
-}
-
-interface Solution {
-  _id: string;
-  solution: string;
-  language: string;
-  createdAt: string;
-}
-
 interface Profile {
-  name: string;
-  username: string;
-  following: User[];
-  followers: User[];
-  userChallenges: Challenge[];
-  userSolutions: Solution[];
+  name: string; 
+  username: string; 
+  following: User[]; 
+  followers: User[]; 
 }
 
-const Profile = () => {
+const Profile = ({ params }: { params: { username: string } }) => {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const { username } = params; // Mengambil username dari params
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const fetchedProfile = await ProfileServer();
-  
-      setProfile(fetchedProfile as Profile);
-      
+      try {
+        const response = await fetch(`/api/profile/${username}`);
+        if (!response.ok) {
+          throw new Error("Pengguna tidak ditemukan");
+        }
+        const fetchedProfile = await response.json();
+        setProfile(fetchedProfile);
+      } catch (err: any) {
+        setError(err.message);
+      }
     };
+    
     fetchProfile();
-  }, []);
+  }, [username]);
 
   const handleShowFollowing = () => {
     setShowFollowing((prev) => !prev);
-    setShowFollowers(false);
+    setShowFollowers(false); // Menutup followers jika following dibuka
   };
 
   const handleShowFollowers = () => {
     setShowFollowers((prev) => !prev);
-    setShowFollowing(false);
+    setShowFollowing(false); // Menutup following jika followers dibuka
   };
 
-  if (!profile) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>; // Menampilkan pesan kesalahan jika ada
+  if (!profile) return <p>Loading...</p>; // Menampilkan loading jika profil belum ada
 
   return (
     <>
       <div className="flex">
+        {/* <Sidebar /> */}
         <main className="flex-1 p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold">My Profile</h1>
+            {/* <h1 className="text-2xl font-bold">Profile {profile.username}</h1> */}
             <LuBell className="text-2xl text-gray-700" />
           </div>
 
           {/* Profile Section */}
           <div className="flex items-start mb-8 gap-6">
             <div className="relative">
+              {/* Placeholder image */}
               <div className="absolute top-0 right-0 bg-white rounded-full p-1 -mt-2 -mr-2">
                 <LuBadgeCheck className="text-green-500 text-xl" />
               </div>
             </div>
             <div>
               <h2 className="text-xl font-bold">{profile.name}</h2>
+              {/* <p className="text-gray-600">@{profile.username}</p> */}
             </div>
           </div>
 
@@ -101,11 +98,12 @@ const Profile = () => {
           {/* Daftar Following */}
           {showFollowing && (
             <div className="mt-4">
+              {/* <h3 className="text-xl font-bold">Following</h3> */}
               <ul>
                 {profile.following.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                      {user.name} ({user.username})
+                    {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
@@ -116,11 +114,12 @@ const Profile = () => {
           {/* Daftar Followers */}
           {showFollowers && (
             <div className="mt-4">
+              {/* <h3 className="text-xl font-bold">Followers</h3> */}
               <ul>
                 {profile.followers.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                      {user.name} ({user.username})
+                    {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
@@ -128,40 +127,7 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Daftar User Challenges */}
-          <div className="mt-8">
-            <h3 className="text-xl font-bold">User Challenges</h3>
-            {profile.userChallenges.length === 0 ? (
-              <p>No challenges found</p>
-            ) : (
-              <ul>
-                {profile.userChallenges.map((challenge) => (
-                  <li key={challenge._id} className="text-gray-600 mt-2">
-                    <strong>{challenge.title}:</strong> {challenge.description}
-                    <br />
-                    <strong>Function:</strong> {challenge.functionName} ({challenge.parameters})
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="mt-8">
-  <h3 className="text-xl font-bold">User Solutions</h3>
-  {profile?.userSolutions?.length === 0 ? (
-    <p>No solutions found</p>
-  ) : (
-    <ul>
-      {profile?.userSolutions?.map((solution) => (
-        <li key={solution._id} className="text-gray-600 mt-2">
-          <strong>Solution (Language: {solution.language}):</strong> <br />
-          <pre>{solution.solution}</pre>
-          <p><strong>Submitted on:</strong> {new Date(solution.createdAt).toLocaleDateString()}</p>
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
+          
         </main>
       </div>
     </>

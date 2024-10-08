@@ -211,6 +211,44 @@ export const getProfileById = async (_id: string) => {
     },
 
     {
+      $lookup: {
+        from: "Challenges",
+        localField: "_id",
+        foreignField: "authorId",
+        as: "userChallenges",
+      },
+    },
+
+    {
+      $lookup: {
+        from: "Solutions",
+        let: { challengeIds: "$userChallenges._id", authorId: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $in: ["$challengeId", "$$challengeIds"] },
+                  { $eq: ["$authorId", "$$authorId"] },
+                ],
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              challengeId: 1,
+              solution: 1,
+              language: 1,
+              createdAt: 1,
+            },
+          },
+        ],
+        as: "solutions",
+      },
+    },
+
+    {
       $project: {
         _id: 1,
         name: 1,
@@ -237,6 +275,28 @@ export const getProfileById = async (_id: string) => {
               name: "$$following.name",
               username: "$$following.username",
               email: "$$following.email",
+            },
+          },
+        },
+
+        userChallenges: {
+          $map: {
+            input: "$userChallenges",
+            as: "challenge",
+            in: {
+              _id: "$$challenge._id",
+              title: "$$challenge.title",
+              description: "$$challenge.description",
+              functionName: "$$challenge.functionName",
+              parameters: "$$challenge.parameters",
+              testCases: "$$challenge.testCases",
+              solutions: {
+                $filter: {
+                  input: "$solutions",
+                  as: "solution",
+                  cond: { $eq: ["$$solution.challengeId", "$$challenge._id"] },
+                },
+              },
             },
           },
         },

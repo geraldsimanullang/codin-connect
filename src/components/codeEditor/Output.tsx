@@ -1,29 +1,32 @@
+"use client";
+
 import { useState } from "react";
 import { executeCode } from "./api";
 import * as monaco from "monaco-editor";
 import { TestCaseModel } from "@/db/models/challenge";
+import { useRouter } from "next/navigation";
+
+const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
   language: string;
   functionName: string;
+  challengeId: string;
   testCases: TestCaseModel[];
-}
-
-interface TestCase {
-  input: string;
-  expectedOutput: string;
 }
 
 const Output: React.FC<OutputProps> = ({
   editorRef,
   language,
   functionName,
+  challengeId,
   testCases,
 }) => {
   const [output, setOutput] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const router = useRouter();
 
   const runCode = async () => {
     if (!editorRef.current) return;
@@ -33,6 +36,7 @@ const Output: React.FC<OutputProps> = ({
     try {
       setIsLoading(true);
       let finalResults: string[] = [];
+      let passCount = 0;
 
       for (let i = 0; i < testCases.length; i++) {
         const { input, expectedOutput } = testCases[i];
@@ -58,6 +62,7 @@ const Output: React.FC<OutputProps> = ({
               i + 1
             } passed: got ${result.output.trim()}, expected ${expectedOutput}`
           );
+          passCount++;
         } else {
           finalResults.push(
             `Test case ${
@@ -69,9 +74,33 @@ const Output: React.FC<OutputProps> = ({
 
       setOutput(finalResults);
       setIsError(false);
+
+      if (passCount === testCases.length) {
+        const response = await fetch(`/api/solution`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            solution: sourceCode,
+            language,
+            challengeId,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to submit the solution");
+        }
+
+        const data = await response.json();
+        console.log("Solution submitted successfully:", data);
+        router.push(`/profile`);
+      }
     } catch (error: any) {
       console.log(error);
       alert(error.message || "Unable to run code");
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +134,12 @@ const Output: React.FC<OutputProps> = ({
       >
         {output && output.length > 0 ? (
           output.map((line, index) => (
-            <p key={index} className="whitespace-pre-wrap">
+            <p
+              key={index}
+              className={`whitespace-pre-wrap ${
+                line.includes("passed") ? "text-green-700" : "text-red-700"
+              }`}
+            >
               {line}
             </p>
           ))

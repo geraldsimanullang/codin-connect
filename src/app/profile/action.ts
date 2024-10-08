@@ -14,5 +14,7 @@ export const getProfile = async (token: string) => {
   }
 
   const data = await response.json();
+  console.log(data);
+
   return data;
 };
