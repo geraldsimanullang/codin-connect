@@ -189,7 +189,7 @@ export const getProfileById = async (_id: string) => {
     {
       $lookup: {
         from: "Users",
-        localField: "followers.followwerId",
+        localField: "followers.followerId",
         foreignField: "_id",
         as: "followerDetails",
       },
@@ -211,33 +211,22 @@ export const getProfileById = async (_id: string) => {
         as: "userChallenges",
       },
     },
-
     {
       $lookup: {
         from: "Solutions",
-        let: { challengeIds: "$userChallenges._id", authorId: "$_id" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $in: ["$challengeId", "$$challengeIds"] },
-                  { $eq: ["$authorId", "$$authorId"] },
-                ],
-              },
-            },
-          },
-          {
-            $project: {
-              _id: 1,
-              challengeId: 1,
-              solution: 1,
-              language: 1,
-              createdAt: 1,
-            },
-          },
-        ],
-        as: "solutions",
+        localField: "_id",
+        foreignField: "authorId",
+        as: "userSolutions",
+      },
+    },
+
+    // Tambahkan lookup untuk mendapatkan detail challenge berdasarkan challengeId di userSolutions
+    {
+      $lookup: {
+        from: "Challenges",
+        localField: "userSolutions.challengeId",
+        foreignField: "_id",
+        as: "challengeDetails",
       },
     },
 
@@ -289,6 +278,36 @@ export const getProfileById = async (_id: string) => {
                   as: "solution",
                   cond: { $eq: ["$$solution.challengeId", "$$challenge._id"] },
                 },
+              },
+            },
+          },
+        },
+
+        userSolutions: {
+          $map: {
+            input: "$userSolutions",
+            as: "solution",
+            in: {
+              _id: "$$solution._id",
+              language: "$$solution.language",
+              solution: "$$solution.solution",
+
+              challenge: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: "$challengeDetails",
+                      as: "challengeDetail",
+                      cond: {
+                        $eq: [
+                          "$$challengeDetail._id",
+                          "$$solution.challengeId",
+                        ],
+                      },
+                    },
+                  },
+                  0,
+                ],
               },
             },
           },
