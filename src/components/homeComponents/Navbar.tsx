@@ -15,7 +15,7 @@ const NavbarComponent: React.FC = () => {
   };
 
   return (
-    <div className="bg-white h-20 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between shadow-lg border backdrop-blur-md z-50 shadow-md">
+    <div className="bg-white h-20 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between border backdrop-blur-md z-50 shadow-md">
       {/* Logo */}
       <div className="flex items-center mb-4 md:mb-0">
         <Image
