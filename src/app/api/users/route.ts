@@ -1,15 +1,15 @@
-import { doRegister } from "@/db/models/user";
+import { doRegister, searchUserByUsername } from "@/db/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { searchUserByUsername } from "@/db/models/user";
 
-type Myresponse<T> = {
+type MyResponse<T> = {
   statusCode: number;
   message?: string;
   data?: T;
   error?: string;
 };
 
+// Validasi input pendaftaran
 const userInputSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   username: z.string().min(1, { message: "Username is required" }),
@@ -23,19 +23,21 @@ const userInputSchema = z.object({
   password: z.string().min(5, { message: "Must be 5 or more characters long" }),
 });
 
+// Handler POST untuk registrasi user
 export const POST = async (request: Request) => {
   try {
     const data = await request.json();
-    console.log("received daaata", data);
+    console.log("received data", data);
+
+    // Validasi input menggunakan zod
     const parseResult = userInputSchema.safeParse(data);
 
     if (!parseResult.success) {
       const errorIssue = parseResult.error.issues[0];
-      console.log("validation error", errorIssue);
       const errorPath = errorIssue.path[0];
       const errorMessage = errorIssue.message;
 
-      return NextResponse.json<Myresponse<never>>(
+      return NextResponse.json<MyResponse<never>>(
         {
           statusCode: 400,
           error: `${errorPath} - ${errorMessage}`,
@@ -44,9 +46,10 @@ export const POST = async (request: Request) => {
       );
     }
 
+    // Melakukan pendaftaran user
     const user = await doRegister(parseResult.data);
 
-    return NextResponse.json<Myresponse<unknown>>(
+    return NextResponse.json<MyResponse<unknown>>(
       {
         statusCode: 201,
         message: "User registered successfully",
@@ -57,7 +60,7 @@ export const POST = async (request: Request) => {
   } catch (error) {
     console.error("Unexpected error:", error);
 
-    return NextResponse.json<Myresponse<never>>(
+    return NextResponse.json<MyResponse<never>>(
       {
         statusCode: 500,
         error: "Internal Server Error",
@@ -67,34 +70,30 @@ export const POST = async (request: Request) => {
   }
 };
 
-export async function GET(request: NextRequest) {
-  const username = request.nextUrl.searchParams.get("username");
-
-  if (!username) {
-    return NextResponse.json(
-      { message: "Username is required", data: null },
-      { status: 400 }
-    );
-  }
-
+// Handler GET untuk pencarian user berdasarkan username
+export async function GET(req: Request) {
   try {
-    const user = await searchUserByUsername(username);
+    const { searchParams } = new URL(req.url);
+    const username = searchParams.get("username");
 
-    if (!user) {
+    if (!username) {
       return NextResponse.json(
-        { message: "User not found", data: null },
-        { status: 404 }
+        { message: "Username is required" },
+        { status: 400 }
       );
     }
 
-    return NextResponse.json(
-      { message: "Success", data: user },
-      { status: 200 }
-    );
+    const user = await searchUserByUsername(username);
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("API error:", error);
     return NextResponse.json(
-      { message: "Internal Server Error", data: null },
+      { message: "An error occurred while searching for the user." },
       { status: 500 }
     );
   }
