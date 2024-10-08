@@ -1,8 +1,9 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link"; // Import Link dari Next.js
-import Image from "next/image"; // Import Image dari Next.js
+import Link from "next/link";
+import Image from "next/image";
+import NavbarComponent from "@/components/homeComponents/Navbar";
 
 const SearchPage: React.FC = () => {
   const searchParams = useSearchParams();
@@ -14,10 +15,7 @@ const SearchPage: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      console.log("Username from URL:", username); // Cek apakah username valid
-      if (!username) {
-        return;
-      }
+      if (!username) return;
 
       setLoading(true);
       try {
@@ -27,7 +25,7 @@ const SearchPage: React.FC = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setUserData(data[0]); // Mengakses elemen pertama jika data berupa array
+          setUserData(data[0]);
         } else {
           setError(data.message || "User not found");
         }
@@ -41,42 +39,53 @@ const SearchPage: React.FC = () => {
     fetchUser();
   }, [username]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen flex-col">
+        <Image
+          src="/loading.svg"
+          alt=""
+          width={100}
+          height={0}
+          style={{ height: "auto" }}
+        />
+        <p className=" font-semibold text-gray-700">Loading...</p>
+      </div>
+    );
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-xl font-semibold mb-4">Search Results</h1>
-      {userData ? (
-        <div className="bg-white shadow-md rounded-lg p-6 flex items-center space-x-4">
-          {/* Avatar */}
-          <Image
-            src={"/default-avatar.jpg"} // URL foto avatar atau fallback jika tidak ada
-            alt={'s avatar'}
-            width={50}
-            height={50}
-            className="rounded-full object-cover"
-          />
-
-          {/* User Info */}
-          <div>
-            <p className="text-gray-700">
-              <Link href={`/profile/${userData.username}`} className=" font-semibold">
-                <i>{userData.name}</i>
-              </Link>
-              <span className="m-3 text-gray-500">
-                (
-                <Link href={`/profile/${userData.username}`} className="">
-                  <i>{userData.username}</i>
+    <div className="min-h-screen flex flex-col items-center bg-gray-50">
+      <div className="p-4 max-w-xl w-full">
+        <h1 className="text-2xl font-bold mb-6 text-center">Search Results</h1>
+        {userData ? (
+          <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
+            {/* Avatar */}
+            <Image
+              src={"/default-avatar.jpg"}
+              alt={`${userData.username}'s avatar`}
+              width={80}
+              height={80}
+              className="rounded-full object-cover"
+            />
+            {/* User Info */}
+            <div className="text-center sm:text-left">
+              <p className="text-gray-800 text-lg font-semibold">
+                <Link href={`/profile/${userData.username}`}>
+                  <i>{userData.name}</i>
                 </Link>
-                )
-              </span>
-            </p>
+              </p>
+              <p className="text-gray-500 mt-1">
+                <Link href={`/profile/${userData.username}`}>
+                  @{userData.username}
+                </Link>
+              </p>
+            </div>
           </div>
-        </div>
-      ) : (
-        <p className="text-gray-500">No user found.</p>
-      )}
+        ) : (
+          <p className="text-gray-500 text-center">No user found.</p>
+        )}
+      </div>
     </div>
   );
 };
