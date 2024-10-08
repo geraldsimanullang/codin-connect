@@ -20,12 +20,14 @@ export type ChallengeModel = {
   functionName: string;
   parameters: string;
   testCases: TestCaseModel[];
-  author:string
+  author: string;
 };
 
 export default function Challenge() {
-  const { id } = useParams<{ id: string }>(); 
-  const [challenge, setChallenge] = useState<ChallengeModel | undefined>(undefined); 
+  const { id } = useParams<{ id: string }>();
+  const [challenge, setChallenge] = useState<ChallengeModel | undefined>(
+    undefined
+  );
 
   const getChallenge = async () => {
     try {
@@ -43,7 +45,6 @@ export default function Challenge() {
     getChallenge();
   }, [id]);
 
-  
   return (
     <>
       {challenge ? (
@@ -61,7 +62,7 @@ export default function Challenge() {
               </div>
               {/* Menambahkan nama penulis di sini */}
               <div className="text-xs text-gray-500 mb-5">
-                <strong></strong> {challenge.author || "Unknown"} 
+                <strong></strong> {challenge.author || "Unknown"}
               </div>
               <p className="text-lg mb-6">{challenge.description}</p>
               <h2 className="text-xl font-semibold mb-2">Test Cases:</h2>
@@ -71,12 +72,14 @@ export default function Challenge() {
                     key={index}
                     className="p-4 bg-white shadow rounded-md border border-gray-200"
                   >
-                    <p className="font-medium">
-                      <span className="text-gray-500">Input:</span>{" "}
+                    <p className="font-medium font-title">
+                      <span className="text-gray-500 font-title">Input:</span>{" "}
                       {testCase.input}
                     </p>
-                    <p className="font-medium">
-                      <span className="text-gray-500">Expected Output:</span>{" "}
+                    <p className="font-medium font-title">
+                      <span className="text-gray-500 font-title">
+                        Expected Output:
+                      </span>{" "}
                       {testCase.expectedOutput}
                     </p>
                   </div>
@@ -89,14 +92,14 @@ export default function Challenge() {
         <div className="flex items-center justify-center min-h-screen flex-col">
           <Image
             src="/loading.svg"
-            alt="loading"
+            alt=""
             width={100}
-            height={100}
+            height={0}
+            style={{ height: "auto" }}
           />
-          <p className="font-semibold text-gray-700">Loading challenge...</p>
+          <p className=" font-semibold text-gray-700">Loading challanges...</p>
         </div>
       )}
     </>
   );
-  
 }

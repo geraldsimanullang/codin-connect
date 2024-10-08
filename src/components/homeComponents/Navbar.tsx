@@ -18,13 +18,15 @@ const NavbarComponent: React.FC = () => {
     <div className="bg-white h-20 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between border backdrop-blur-md z-50 shadow-md">
       {/* Logo */}
       <div className="flex items-center mb-4 md:mb-0">
-        <Image
-          src="/logo-coding-connect.png"
-          alt="Logo"
-          height={50}
-          width={150}
-          className="object-contain"
-        />
+        <Link href="/">
+          <Image
+            src="/logo-coding-connect.png"
+            alt="Logo"
+            height={50}
+            width={150}
+            className="object-contain"
+          />
+        </Link>
       </div>
 
       {/* Search Component */}
@@ -32,9 +34,9 @@ const NavbarComponent: React.FC = () => {
 
       {/* Navigation */}
       <div className="flex space-x-4 md:space-x-8 items-center">
-        <Link href="/">
+        <Link href="/global-challenges">
           <span className="cursor-pointer transition-all hover:text-blue-600">
-            Home
+            Explore
           </span>
         </Link>
         <Link href="/profile">
@@ -42,11 +44,7 @@ const NavbarComponent: React.FC = () => {
             Profile
           </span>
         </Link>
-        <Link href="/create-challenge">
-          <span className="cursor-pointer transition-all hover:text-blue-600">
-            + Add Challenge
-          </span>
-        </Link>
+
         <button
           onClick={handleLogout}
           className="cursor-pointer transition-all hover:text-red-500 text-red-400"
