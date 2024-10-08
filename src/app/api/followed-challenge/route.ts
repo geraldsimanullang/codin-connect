@@ -10,8 +10,6 @@ type FollowingType = {
 export const GET = async (request: Request) => {
   try {
     const cookieHeader = request.headers.get("cookie");
-    console.log(cookieHeader, "<<<<< cookie nya nihhhhh");
-    
     const token = cookieHeader
       ?.split("; ")
       .find((row) => row.startsWith("token="))
@@ -29,23 +27,25 @@ export const GET = async (request: Request) => {
     }
 
     const userId = decodedPayload?.id;
-    console.log(userId, "<<<<<<< user id nyaaaaaa");
-    
     const userProfile = await getProfileById(userId);
     
     if (!userProfile) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    console.log(userProfile.following, "<<<<< following data");
+    
     const followingIds: string[] = (userProfile.following as FollowingType[]).map((following) => following._id);
+    console.log(followingIds, "<<<<< following IDs");
 
     const allChallenges = await getChallenges();
+    console.log(allChallenges, "<<<<< all challenges");
 
     const userChallenges = allChallenges.filter(challenge => 
       challenge.authorId === userId || followingIds.includes(challenge.authorId)
     );
 
-    console.log(userChallenges, "<<<<<< challenge yang kamu follow disiniiiii yuhuuuuu");
+    console.log(userChallenges, "<<<<<< challenges that you follow");
     
     return NextResponse.json(userChallenges, { status: 200 });
 
