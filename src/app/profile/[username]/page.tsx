@@ -1,10 +1,8 @@
-
-"use client"; 
+"use client";
 
 import { useState, useEffect } from "react";
 import { LuBadgeCheck, LuBell } from "react-icons/lu";
 import Link from "next/link";
-
 
 interface User {
   name: string;
@@ -12,10 +10,10 @@ interface User {
 }
 
 interface Profile {
-  name: string; 
-  username: string; 
-  following: User[]; 
-  followers: User[]; 
+  name: string;
+  username: string;
+  following: User[];
+  followers: User[];
 }
 
 const Profile = ({ params }: { params: { username: string } }) => {
@@ -24,8 +22,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { username } = params; // Mengambil username dari params
-
+  const { username } = params;
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -39,7 +36,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
         setError(err.message);
       }
     };
-    
+
     fetchProfile();
   }, [username]);
 
@@ -85,11 +82,15 @@ const Profile = ({ params }: { params: { username: string } }) => {
           <div className="border-t border-gray-200 pt-6">
             <div className="grid grid-cols-4 text-center gap-6">
               <div onClick={handleShowFollowing} className="cursor-pointer">
-                <div className="text-3xl font-bold">{profile.following.length}</div>
+                <div className="text-3xl font-bold">
+                  {profile.following.length}
+                </div>
                 <div className="text-gray-600">Following</div>
               </div>
               <div onClick={handleShowFollowers} className="cursor-pointer">
-                <div className="text-3xl font-bold">{profile.followers.length}</div>
+                <div className="text-3xl font-bold">
+                  {profile.followers.length}
+                </div>
                 <div className="text-gray-600">Followers</div>
               </div>
             </div>
@@ -103,7 +104,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
                 {profile.following.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                    {user.name} ({user.username})
+                      {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
@@ -119,15 +120,13 @@ const Profile = ({ params }: { params: { username: string } }) => {
                 {profile.followers.map((user) => (
                   <li key={user.username} className="text-gray-600">
                     <Link href={`/profile/${user.username}`}>
-                    {user.name} ({user.username})
+                      {user.name} ({user.username})
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
           )}
-
-          
         </main>
       </div>
     </>
