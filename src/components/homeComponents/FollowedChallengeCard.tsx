@@ -9,7 +9,7 @@ interface Challenge {
   functionName: string;
   parameters: string;
   authorId: string;
-  author?: string
+  author?: string;
   testCases: Array<{
     input: string;
     expectedOutput: string;
@@ -60,7 +60,14 @@ const FollowedChallengeCard: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-4 max-w-4xl w-full mx-auto mt-4">
         {challenges.length === 0 ? (
-          <p>No challenges created by your followed users.</p>
+          <>
+            <p>No challenges created by your followed users.</p>
+            <Link href="/global-challenges">
+              <button className="bg-black text-white rounded px-6 py-3 shadow-md mt-6 mb-6">
+                Go to Global Challenges
+              </button>
+            </Link>
+          </>
         ) : (
           challenges.map((challenge) => (
             <div
@@ -73,18 +80,14 @@ const FollowedChallengeCard: React.FC = () => {
                 </h2>
               </Link>
               <div className="text-sm text-gray-600 mb-2">
-                <strong>{challenge.author || "Unknown"}</strong> {/* Menampilkan nama penulis */}
+                <strong>{challenge.author || "Unknown"}</strong>{" "}
+                {/* Menampilkan nama penulis */}
               </div>
               <p className="text-gray-700 mb-4">{challenge.description}</p>
             </div>
           ))
         )}
       </div>
-      <Link href="/global-challenges">
-        <button className="bg-black text-white rounded px-6 py-3 shadow-md mt-6 mb-6">
-          Go to Global Challenges
-        </button>
-      </Link>
     </div>
   );
 };
