@@ -71,12 +71,14 @@ export default function Solve() {
                     key={index}
                     className="p-4 bg-white shadow rounded-md border border-gray-200"
                   >
-                    <p className="font-medium">
-                      <span className="text-gray-500">Input:</span>{" "}
+                    <p className="font-medium font-title">
+                      <span className="text-gray-500 font-title">Input:</span>{" "}
                       {testCase.input}
                     </p>
-                    <p className="font-medium">
-                      <span className="text-gray-500">Expected Output:</span>{" "}
+                    <p className="font-medium font-title">
+                      <span className="text-gray-500 font-title ">
+                        Expected Output:
+                      </span>{" "}
                       {testCase.expectedOutput}
                     </p>
                   </div>

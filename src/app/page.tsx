@@ -11,7 +11,6 @@ const Home: React.FC = () => {
         <NavbarComponent />
         <FollowedChallengeCard />
         {/* <Hero /> */}
-        {/* <Footer /> */}
       </div>
     </div>
   );
