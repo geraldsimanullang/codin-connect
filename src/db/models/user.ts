@@ -54,7 +54,25 @@ export const getUserByUsername = async (username: string) => {
 
 export const searchUserByUsername = async (username: string) => {
   const db = await getDb();
-  const user = await db.collection("Users").findOne({ username });
+  const user = await db
+    .collection("Users")
+    .find({
+      $or: [
+        {
+          name: {
+            $regex: username,
+            $options: "i", // perbaikan di sini
+          },
+        },
+        {
+          username: {
+            $regex: username,
+            $options: "i", // perbaikan di sini
+          },
+        },
+      ],
+    })
+    .toArray();
 
   return user;
 };
