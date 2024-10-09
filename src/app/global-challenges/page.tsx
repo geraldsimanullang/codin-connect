@@ -84,7 +84,7 @@ const ChallengeCard: React.FC = () => {
 
         {/* Container untuk card, dengan lebar yang sama */}
         <div className="grid grid-cols-1 gap-4 max-w-[1200px] w-full mx-auto mt-2 px-4">
-          {challenges.reverse().map((challenge) => (
+          {challenges.map((challenge) => (
             <div
               key={challenge._id}
               className="card bg-white shadow-lg rounded-lg p-6 transition-transform"

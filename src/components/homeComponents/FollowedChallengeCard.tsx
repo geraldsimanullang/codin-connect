@@ -88,7 +88,7 @@ const FollowedChallengeCard: React.FC = () => {
               </div>
             </div>
           ) : (
-            challenges.reverse().map((challenge) => (
+            challenges.map((challenge) => (
               <div
                 key={challenge._id}
                 className="card bg-white shadow-lg rounded-lg p-6 transition-transform"
