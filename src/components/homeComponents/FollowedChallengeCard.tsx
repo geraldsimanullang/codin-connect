@@ -2,6 +2,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image"; // Pastikan untuk mengimpor Image
+import { motion } from "framer-motion";
+import {
+  slideInFromTop,
+  slideInFromLeft,
+  slideInFromRight,
+} from "@/utils/motion";
 
 interface Challenge {
   _id: string;
@@ -67,7 +73,7 @@ const FollowedChallengeCard: React.FC = () => {
         <div className="flex justify-between items-center mb-4 max-w-[1200px] w-full mx-auto px-4">
           <h1 className="text-2xl font-bold text-black">Feeds</h1>
           <Link href="/create-challenge">
-            <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
+            <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md font-mono">
               Add Challenge
             </button>
           </Link>
@@ -78,11 +84,11 @@ const FollowedChallengeCard: React.FC = () => {
           {challenges.length === 0 ? (
             <div className="flex items-center justify-center min-h-screen bg-gray-100">
               <div className="text-center">
-                <p className="text-lg text-gray-700 mb-4">
+                <p className="text-lg text-gray-700 mb-4 font-mono">
                   No challenges created by your followed users.
                 </p>
                 <Link href="/global-challenges">
-                  <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
+                  <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md font-mono">
                     Go to Global Challenges
                   </button>
                 </Link>
@@ -102,7 +108,9 @@ const FollowedChallengeCard: React.FC = () => {
                 <div className="text-sm text-gray-600 mb-2">
                   <strong>{challenge.author || "Unknown"}</strong>
                 </div>
-                <p className="text-gray-700 mb-4">{challenge.description}</p>
+                <p className="text-gray-700 mb-4 font-mono">
+                  {challenge.description}
+                </p>
               </div>
             ))
           )}
