@@ -70,7 +70,6 @@ const Output: React.FC<OutputProps> = ({
             })
             .toString()}));`;
         }
-        console.log(finalCode);
 
         const { run: result } = await executeCode(language, finalCode);
 
