@@ -9,6 +9,7 @@ import { ObjectId } from "mongodb";
 import ProfileServer from "../profileServer";
 
 interface User {
+  _id: string;
   name: string;
   username: string;
 }
@@ -134,7 +135,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
                   followUserId={profile._id.toString()}
                   fetchProfile={fetchProfile}
                   currentFollowers={profile.followers}
-                  ownId={ownProfile?._id.toString()}
+                  ownId={ownProfile?._id.toString() || ""}
                 />
               </div>
 

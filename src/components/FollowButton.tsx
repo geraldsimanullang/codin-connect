@@ -2,17 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 
-const FollowButton = ({
+interface User {
+  _id: string;
+  name: string;
+  username: string;
+}
+
+interface FollowButtonProps {
+  followUserId: string;
+  fetchProfile: () => void;
+  currentFollowers: User[];
+  ownId: string;
+}
+
+const FollowButton: React.FC<FollowButtonProps> = ({
   followUserId,
   fetchProfile,
   currentFollowers,
   ownId,
 }) => {
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   useEffect(() => {
     const isAlreadyFollowing = currentFollowers.some(
-      (follower) => follower._id.toString() === ownId
+      (follower) => follower._id === ownId
     );
     setIsFollowing(isAlreadyFollowing);
   }, [currentFollowers, ownId]);
@@ -29,7 +42,7 @@ const FollowButton = ({
       });
 
       if (response.ok) {
-        setIsFollowing(!isFollowing);
+        setIsFollowing((prev) => !prev); // Toggle following status
         fetchProfile();
       } else {
         console.error("Failed to follow/unfollow user");
@@ -51,6 +64,8 @@ const FollowButton = ({
       </button>
     );
   }
+
+  return null;
 };
 
 export default FollowButton;
