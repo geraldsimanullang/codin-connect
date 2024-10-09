@@ -43,7 +43,9 @@ interface Profile {
 const Profile = ({ params }: { params: { username: string } }) => {
   const [activeTab, setActiveTab] = useState("challenges");
   const [showModal, setshowModal] = useState(false);
-  const [modalType, setModaltype] = useState<"following" | "followers" | null>(null);
+  const [modalType, setModaltype] = useState<"following" | "followers" | null>(
+    null
+  );
   const [profile, setProfile] = useState<Profile | null>(null);
   const [ownProfile, setOwnProfile] = useState<Profile | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,8 +60,10 @@ const Profile = ({ params }: { params: { username: string } }) => {
       }
       const fetchedProfile = await response.json();
       setProfile(fetchedProfile);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
     }
   };
 
@@ -78,20 +82,20 @@ const Profile = ({ params }: { params: { username: string } }) => {
 
   const handleShowFollowing = () => {
     setModaltype("following");
-    setshowModal(true)
+    setshowModal(true);
   };
 
   const handleShowFollowers = () => {
     setModaltype("followers");
-    setshowModal(true)
+    setshowModal(true);
   };
 
   const closeModal = () => {
-    setshowModal(false)
-    setModaltype(null)
-  }
+    setshowModal(false);
+    setModaltype(null);
+  };
 
-  if (error) return <p>{error}</p>; 
+  if (error) return <p>{error}</p>;
   if (!profile)
     return (
       <div className="flex items-center justify-center min-h-screen flex-col">
@@ -170,32 +174,49 @@ const Profile = ({ params }: { params: { username: string } }) => {
             </div>
           </div>
 
-          
           {showModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white rounded-lg p-4 w-11/12 max-w-md relative">
-      <button
-        onClick={closeModal}
-        className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-xl font-bold"
-      >
-        X
-      </button>
-      <h2 className="font-semibold mb-4">{modalType === "following" ? "Following" : "Followers"} ({modalType === "following" ? profile.following.length : profile.followers.length})</h2>
-      <ul>
-        {(modalType === "following" ? profile.following : profile.followers).map((user,index) => (
-          <li key={user.username} className= "mb-2">
-            <Link href={`/profile/${user.username}`}>
-             <span className="text-black font-semibold">  {user.name}</span> <span className="text-gray-600 text-sm">({user.username})</span>
-            </Link>
-            {index < (modalType === "following" ? profile.following : profile.followers).length - 1 && (
-              <hr className="my-2 border-gray-300" />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-)}
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white rounded-lg p-4 w-11/12 max-w-md relative">
+                <button
+                  onClick={closeModal}
+                  className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-xl font-bold"
+                >
+                  X
+                </button>
+                <h2 className="font-semibold mb-4">
+                  {modalType === "following" ? "Following" : "Followers"} (
+                  {modalType === "following"
+                    ? profile.following.length
+                    : profile.followers.length}
+                  )
+                </h2>
+                <ul>
+                  {(modalType === "following"
+                    ? profile.following
+                    : profile.followers
+                  ).map((user, index) => (
+                    <li key={user.username} className="mb-2">
+                      <Link href={`/profile/${user.username}`}>
+                        <span className="text-black font-semibold">
+                          {" "}
+                          {user.name}
+                        </span>{" "}
+                        <span className="text-gray-600 text-sm">
+                          ({user.username})
+                        </span>
+                      </Link>
+                      {index <
+                        (modalType === "following"
+                          ? profile.following
+                          : profile.followers
+                        ).length -
+                          1 && <hr className="my-2 border-gray-300" />}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
 
           {/* Tabs for Challenges and Solutions */}
           <div className="mt-8">

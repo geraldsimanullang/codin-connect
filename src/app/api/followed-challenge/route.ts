@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { readPayload } from "@/lib/jwt";
-import { getChallenges, getChallengesByFollowing } from "@/db/models/challenge";
+import { getChallengesByFollowing } from "@/db/models/challenge";
 import { getProfileById } from "@/db/models/user";
 import { ObjectId } from "mongodb";
 
@@ -24,6 +24,7 @@ export const GET = async (request: Request) => {
     try {
       decodedPayload = readPayload(token);
     } catch (error) {
+      console.log(error);
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
