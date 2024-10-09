@@ -1,13 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Pastikan untuk mengimpor Image
-import { motion } from "framer-motion";
-import {
-  slideInFromTop,
-  slideInFromLeft,
-  slideInFromRight,
-} from "@/utils/motion";
+import Image from "next/image";
 
 interface Challenge {
   _id: string;

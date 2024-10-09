@@ -1,24 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { doLogin } from "./action";
+import ErrorMessage from "./ClientFlashComponent";
 import { Suspense } from "react";
 
 const Login = () => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const searchParams = useSearchParams();
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const error = searchParams.get("error");
-    if (error) {
-      setErrorMessage(decodeURIComponent(error));
-    }
-  }, [searchParams]);
+  // useEffect(() => {
+  //   const error = searchParams.get("error");
+  //   if (error) {
+  //     setErrorMessage(decodeURIComponent(error));
+  //   }
+  // }, [searchParams]);
 
   return (
     <motion.div
@@ -63,14 +64,9 @@ const Login = () => {
               </div>
 
               {/* Tampilkan Error Message */}
-              {errorMessage && (
-                <Suspense>
-                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 flex justify-center">
-                    <span className="block sm:inline">{errorMessage}</span>
-                  </div>
-                </Suspense>
-              )}
-
+              <Suspense>
+                <ErrorMessage />
+              </Suspense>
               <form
                 action={doLogin}
                 className="flex flex-col items-center z-10"
