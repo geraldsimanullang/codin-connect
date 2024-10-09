@@ -1,5 +1,6 @@
 import { getChallenges } from "@/db/models/challenge";
-// import { readPayload } from "@/lib/jwt";
+
+export const dynamic = "force-dynamic";
 
 export const GET = async (request: Request) => {
   try {
@@ -16,17 +17,6 @@ export const GET = async (request: Request) => {
         headers: { "Content-Type": "application/json" },
       });
     }
-
-    // let decodedPayload;
-    // try {
-    // decodedPayload = readPayload(token);
-
-    // } catch (error) {
-    //   return new Response(JSON.stringify({ error: "Invalid token" }), {
-    //     status: 401,
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    // }
 
     const challenges = await getChallenges();
 

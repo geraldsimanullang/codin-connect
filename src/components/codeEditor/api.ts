@@ -1,14 +1,13 @@
 "use server";
 
 import { LANGUAGE_VERSIONS } from "./constans";
-import { cookies } from "next/headers";
 
 interface ExecuteCodeResponse {
   run: {
     output: string;
     stderr?: string;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const executeCode = async (

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { readPayloadJose } from "./lib/jwt";
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;

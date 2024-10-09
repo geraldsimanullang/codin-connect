@@ -5,11 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import NavbarComponent from "@/components/homeComponents/Navbar";
 
+interface UserData {
+  username: string;
+  name: string;
+  avatarUrl?: string;
+}
+
 const SearchPage: React.FC = () => {
   const searchParams = useSearchParams();
   const username = searchParams.get("username");
 
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +35,8 @@ const SearchPage: React.FC = () => {
         } else {
           setError(data.message || "User not found");
         }
-      } catch (err) {
+      } catch (error) {
+        console.log(error);
         setError("An error occurred while fetching user data.");
       } finally {
         setLoading(false);

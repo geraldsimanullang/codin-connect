@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { doLogin } from "./action";
+import { Suspense } from "react";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -63,9 +64,11 @@ const Login = () => {
 
               {/* Tampilkan Error Message */}
               {errorMessage && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 flex justify-center">
-                  <span className="block sm:inline">{errorMessage}</span>
-                </div>
+                <Suspense>
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 flex justify-center">
+                    <span className="block sm:inline">{errorMessage}</span>
+                  </div>
+                </Suspense>
               )}
 
               <form
@@ -98,7 +101,7 @@ const Login = () => {
 
                   <div className="text-center m-6">
                     <div className="text-gray-400 text-sm">
-                      Don't have an account?{" "}
+                      Don&apos;t have an account?{" "}
                       <Link href={"/register"} className="text-blue-600">
                         Register
                       </Link>

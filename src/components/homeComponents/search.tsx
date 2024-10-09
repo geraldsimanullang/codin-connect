@@ -20,11 +20,16 @@ const Search: React.FC = () => {
     try {
       router.push(`/search?username=${searchQuery}`);
     } catch (error) {
+      console.log(error);
       setError("An error occurred.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <form

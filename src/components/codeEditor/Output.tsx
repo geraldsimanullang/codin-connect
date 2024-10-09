@@ -7,7 +7,7 @@ import { TestCaseModel } from "@/db/models/challenge";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+// const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
@@ -37,7 +37,7 @@ const Output: React.FC<OutputProps> = ({
 
     try {
       setIsLoading(true);
-      let finalResults: string[] = [];
+      const finalResults: string[] = [];
       let passCount = 0;
 
       for (let i = 0; i < testCases.length; i++) {
@@ -98,9 +98,11 @@ const Output: React.FC<OutputProps> = ({
         await response.json();
         setIsSolved(true);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      alert(error.message || "Unable to run code");
+      if (error instanceof Error) {
+        alert(error.message || "Unable to run code");
+      }
       setIsError(true);
     } finally {
       setIsLoading(false);
@@ -184,7 +186,7 @@ const Output: React.FC<OutputProps> = ({
           ))
         ) : (
           <p className="text-gray-500 italic">
-            Click "Attempt" to test your solution
+            Click &quot;Attempt&quot; to test your solution
           </p>
         )}
       </div>

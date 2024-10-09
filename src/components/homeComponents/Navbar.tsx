@@ -1,14 +1,11 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { logout } from "@/app/login/action";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Search from "./search";
 
 const NavbarComponent: React.FC = () => {
-  const router = useRouter();
-
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     logout();
