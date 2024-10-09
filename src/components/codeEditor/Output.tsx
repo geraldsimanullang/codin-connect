@@ -7,8 +7,6 @@ import { TestCaseModel } from "@/db/models/challenge";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const url = process.env.NEXT_PUBLIC_BASE_URL || "http:localhost:3000";
-
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;
   language: string;
@@ -44,25 +42,41 @@ const Output: React.FC<OutputProps> = ({
         const { input, expectedOutput } = testCases[i];
 
         let finalCode: string = "";
+        const inputArr = input.split(",");
 
         if (language === "javascript") {
           finalCode = `
             ${sourceCode}
-            console.log(${functionName}(${input})); 
+            console.log(${functionName}(${inputArr
+            .map((input) => {
+              if (isNaN(Number(input))) {
+                return `"${input}"`;
+              }
+
+              return Number(input);
+            })
+            .toString()})); 
           `;
         }
 
         if (language === "python") {
-          finalCode = `${sourceCode}\nprint(${functionName}(${input}));`;
+          finalCode = `${sourceCode}\nprint(${functionName}(${inputArr
+            .map((input) => {
+              if (isNaN(Number(input))) {
+                return `"${input}"`;
+              }
+
+              return Number(input);
+            })
+            .toString()}));`;
         }
+        console.log(finalCode);
 
         const { run: result } = await executeCode(language, finalCode);
 
         if (result.output.trim() == expectedOutput) {
           finalResults.push(
-            `Test case ${
-              i + 1
-            } passed: got ${result.output.trim()}, expected ${expectedOutput}`
+            `Test case ${i + 1} passed: got ${result.output.trim()}`
           );
           passCount++;
         } else {

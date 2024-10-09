@@ -183,7 +183,12 @@ export const getProfileByUsername = async (username: string) => {
 
         userChallenges: {
           $map: {
-            input: "$userChallenges",
+            input: {
+              $sortArray: {
+                input: "$userChallenges",
+                sortBy: { createdAt: -1 },
+              },
+            },
             as: "challenge",
             in: {
               _id: "$$challenge._id",
@@ -205,13 +210,17 @@ export const getProfileByUsername = async (username: string) => {
 
         userSolutions: {
           $map: {
-            input: "$userSolutions",
+            input: {
+              $sortArray: {
+                input: "$userSolutions",
+                sortBy: { createdAt: -1 },
+              },
+            },
             as: "solution",
             in: {
               _id: "$$solution._id",
               language: "$$solution.language",
               solution: "$$solution.solution",
-
               challenge: {
                 $arrayElemAt: [
                   {
@@ -368,7 +377,12 @@ export const getProfileById = async (_id: string) => {
 
         userChallenges: {
           $map: {
-            input: "$userChallenges",
+            input: {
+              $sortArray: {
+                input: "$userChallenges",
+                sortBy: { createdAt: -1 }, // Sorting by `createdAt` descending
+              },
+            },
             as: "challenge",
             in: {
               _id: "$$challenge._id",
@@ -390,7 +404,12 @@ export const getProfileById = async (_id: string) => {
 
         userSolutions: {
           $map: {
-            input: "$userSolutions",
+            input: {
+              $sortArray: {
+                input: "$userSolutions",
+                sortBy: { createdAt: -1 }, // Sorting by `createdAt` descending
+              },
+            },
             as: "solution",
             in: {
               _id: "$$solution._id",

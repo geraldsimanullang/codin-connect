@@ -57,7 +57,6 @@ export const doLogin = async (formdata: FormData) => {
   };
 
   const token = createToken(payload);
-  console.log(token);
 
   cookies().set("token", token, {
     httpOnly: true,

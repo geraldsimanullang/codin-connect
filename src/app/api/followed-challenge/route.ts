@@ -35,16 +35,11 @@ export const GET = async (request: Request) => {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log(userProfile.following, "<<<<< following data");
-
     const followingIds: string[] = (
       userProfile.following as FollowingType[]
     ).map((following) => following._id.toString());
-    console.log(followingIds, "<<<<< following IDs");
 
     const userChallenges = await getChallengesByFollowing(followingIds);
-
-    console.log(userChallenges, "<<<<<< challenges that you follow");
 
     return NextResponse.json(userChallenges, { status: 200 });
   } catch (error) {

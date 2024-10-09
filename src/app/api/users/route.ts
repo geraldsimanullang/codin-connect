@@ -25,7 +25,6 @@ const userInputSchema = z.object({
 export const POST = async (request: Request) => {
   try {
     const data = await request.json();
-    console.log("received data", data);
 
     const parseResult = userInputSchema.safeParse(data);
 

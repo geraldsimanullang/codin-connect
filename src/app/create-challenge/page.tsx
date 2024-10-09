@@ -77,8 +77,6 @@ export default function CreateChallenge() {
         credentials: "include",
       });
 
-      console.log(response);
-
       if (response.ok) {
         console.log("Challenge created successfully");
         const result = await response.json();

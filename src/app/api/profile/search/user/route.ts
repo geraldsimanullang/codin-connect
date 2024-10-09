@@ -5,8 +5,6 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");
 
-  console.log(username);
-
   if (!username) {
     return NextResponse.json(
       { error: "Username is required" },
@@ -17,7 +15,6 @@ export async function GET(req: Request) {
   try {
     const user = await searchUserByUsername(username);
 
-    console.log(user);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }

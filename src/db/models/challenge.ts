@@ -98,6 +98,11 @@ export const getChallenges = async () => {
           preserveNullAndEmptyArrays: true,
         },
       },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
     ])
     .toArray();
 
@@ -151,6 +156,11 @@ export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
           $unwind: {
             path: "$User",
             preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
           },
         },
       ])

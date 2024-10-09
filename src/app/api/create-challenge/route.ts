@@ -65,7 +65,6 @@ export const POST = async (request: Request) => {
     };
 
     const result = await createNewChallenge(newChallenge);
-    console.log(result.insertedId.toString());
 
     return new Response(
       JSON.stringify({
