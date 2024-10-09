@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { createNewChallenge } from "@/db/models/challenge";
-import { readPayload } from "@/lib/jwt"; // Fungsi untuk membaca token JWT
+import { readPayload } from "@/lib/jwt";
 
-// Schema validasi menggunakan Zod
 const challengeSchema = z.object({
   title: z.string().nonempty("Title is required"),
   description: z.string().nonempty("Description is required"),

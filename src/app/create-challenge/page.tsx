@@ -129,7 +129,7 @@ export default function CreateChallenge() {
               </label>
               <input
                 type="text"
-                className="w-full p-2 text-sm text-gray-700 rounded-lg border bg-transparent focus:border-black focus:ring-black border-black"
+                className="w-full p-2 text-sm text-gray-700 rounded-lg border bg-transparent focus:border-black focus:ring-black border-black font-mono"
                 name="functionName"
                 required
               />
@@ -138,7 +138,7 @@ export default function CreateChallenge() {
               <label className="block text-lg font-bold mb-2">Parameters</label>
               <input
                 type="text"
-                className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                className="w-full p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black font-mono"
                 name="parameters"
                 required
               />
@@ -151,7 +151,7 @@ export default function CreateChallenge() {
                 <input
                   type="text"
                   name={`testCase${index + 1}`}
-                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black font-mono"
                   placeholder="Place input here. example: 1, 2"
                   value={testCase.input}
                   onChange={(e) => handleChange(index, "input", e.target.value)}
@@ -159,7 +159,7 @@ export default function CreateChallenge() {
                 <input
                   type="text"
                   name={`expectedOutput${index + 1}`}
-                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black"
+                  className="w-1/2 p-2 text-sm text-gray-700 rounded-lg border border-black bg-transparent focus:border-black focus:ring-black font-mono"
                   placeholder="Place expected output here. example: 3"
                   value={testCase.expectedOutput}
                   onChange={(e) =>

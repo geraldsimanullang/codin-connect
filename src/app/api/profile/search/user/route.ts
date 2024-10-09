@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { searchUserByUsername } from "@/db/models/user";
-// Menangani permintaan GET
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const username = searchParams.get("username");

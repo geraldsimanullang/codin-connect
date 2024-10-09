@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { useSearchParams } from "next/navigation";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { doLogin } from "./action";
@@ -11,16 +10,6 @@ import ErrorMessage from "./ClientFlashComponent";
 import { Suspense } from "react";
 
 const Login = () => {
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // const searchParams = useSearchParams();
-
-  // useEffect(() => {
-  //   const error = searchParams.get("error");
-  //   if (error) {
-  //     setErrorMessage(decodeURIComponent(error));
-  //   }
-  // }, [searchParams]);
-
   return (
     <motion.div
       initial="hidden"
@@ -79,7 +68,7 @@ const Login = () => {
                     <i className="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     <input
                       type="text"
-                      placeholder="Username"
+                      placeholder="Email or Username"
                       className="pl-10 pr-4 py-2 w-full rounded-full shadow-md focus:outline-none"
                       name="loginField"
                     />

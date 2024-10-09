@@ -11,13 +11,12 @@ interface Challenge {
   parameters: string;
   authorId: string;
   author?: string;
+  authorUsername: string;
   testCases: Array<{
     input: string;
     expectedOutput: string;
   }>;
 }
-
-const url = process.env.NEXT_PUBLIC_DATABASE_URL || "http://localhost:3000";
 
 const FollowedChallengeCard: React.FC = () => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
@@ -68,7 +67,7 @@ const FollowedChallengeCard: React.FC = () => {
           <h1 className="text-2xl font-bold text-black">Feeds</h1>
           <Link href="/create-challenge">
             <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md font-mono">
-              Add Challenge
+              Create a Challenge
             </button>
           </Link>
         </div>
@@ -89,18 +88,22 @@ const FollowedChallengeCard: React.FC = () => {
               </div>
             </div>
           ) : (
-            challenges.map((challenge) => (
+            challenges.reverse().map((challenge) => (
               <div
                 key={challenge._id}
                 className="card bg-white shadow-lg rounded-lg p-6 transition-transform"
               >
-                <Link href={`${url}/challenge/${challenge._id}`}>
+                <Link href={`/challenge/${challenge._id}`}>
                   <h2 className="text-xl font-bold text-black hover:text-blue-800 transition duration-200">
                     {challenge.title}
                   </h2>
                 </Link>
                 <div className="text-sm text-gray-600 mb-2">
-                  <strong>{challenge.author || "Unknown"}</strong>
+                  <Link href={`/profile/${challenge.authorUsername}` || ""}>
+                    <strong className="hover:text-blue-800 transition duration-200">
+                      {challenge.author || "Unknown"}
+                    </strong>
+                  </Link>
                 </div>
                 <p className="text-gray-700 mb-4 font-mono">
                   {challenge.description}

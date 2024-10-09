@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import NavbarComponent from "@/components/homeComponents/Navbar";
-import Image from "next/image"; // Import Image for loading spinner
+import Image from "next/image";
 
 interface Challenge {
   _id: string;
@@ -13,14 +13,13 @@ interface Challenge {
   authorId: string;
   author?: {
     name: string;
+    username: string;
   };
   testCases: Array<{
     input: string;
     expectedOutput: string;
   }>;
 }
-
-const url = process.env.NEXT_PUBLIC_DATABASE_URL || "http://localhost:3000";
 
 const ChallengeCard: React.FC = () => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
@@ -34,6 +33,7 @@ const ChallengeCard: React.FC = () => {
         throw new Error("Failed to fetch challenges");
       }
       const data: Challenge[] = await response.json();
+
       setChallenges(data);
     } catch (err) {
       if (err instanceof Error) {
@@ -54,15 +54,13 @@ const ChallengeCard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen flex-col">
-        <Image
-          src="/loading.svg" // Make sure to use the correct path to your loading image
-          alt="Loading..."
-          width={100}
-          height={100}
-        />
-        <p className="font-semibold text-gray-700">Loading challenges...</p>
-      </div>
+      <>
+        <NavbarComponent />
+        <div className="flex items-center justify-center min-h-screen flex-col">
+          <Image src="/loading.svg" alt="Loading..." width={100} height={100} />
+          <p className="font-semibold text-gray-700">Loading challenges...</p>
+        </div>
+      </>
     );
   }
 
@@ -78,26 +76,30 @@ const ChallengeCard: React.FC = () => {
         <div className="flex justify-between items-center mb-4 max-w-[1200px] w-full mx-auto px-4">
           <h1 className="text-2xl font-bold text-black">Global challenges</h1>
           <Link href="/create-challenge">
-            <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md">
-              Add Challenge
+            <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md font-mono">
+              Create a Challenge
             </button>
           </Link>
         </div>
 
         {/* Container untuk card, dengan lebar yang sama */}
         <div className="grid grid-cols-1 gap-4 max-w-[1200px] w-full mx-auto mt-2 px-4">
-          {challenges.map((challenge) => (
+          {challenges.reverse().map((challenge) => (
             <div
               key={challenge._id}
               className="card bg-white shadow-lg rounded-lg p-6 transition-transform"
             >
-              <Link href={`${url}/challenge/${challenge._id}`}>
+              <Link href={`/challenge/${challenge._id}`}>
                 <h2 className="text-xl font-bold text-black hover:text-blue-800 transition duration-200">
                   {challenge.title}
                 </h2>
               </Link>
               <div className="text-sm text-gray-600 mb-2">
-                <strong>{challenge.author?.name || "Unknown"}</strong>
+                <Link href={`/profile/${challenge.author?.username}`}>
+                  <strong className="hover:text-blue-800 transition duration-200">
+                    {challenge.author?.name || "Unknown"}
+                  </strong>
+                </Link>
               </div>
               <p className="text-gray-700 mb-4 font-mono">
                 {challenge.description}

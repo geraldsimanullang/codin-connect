@@ -131,34 +131,31 @@ export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
   try {
     const db = await getDb();
 
-    // Mengubah string menjadi ObjectId
     const arrayOfObjectIds = arrayOfIds.map((id) => new ObjectId(id));
 
     const challenges = await db
       .collection(COLLECTION_NAME)
       .aggregate([
         {
-          $match: { authorId: { $in: arrayOfObjectIds } }, // Filter berdasarkan authorId
+          $match: { authorId: { $in: arrayOfObjectIds } },
         },
         {
           $lookup: {
-            from: "Users", // Nama koleksi Users
-            localField: "authorId", // Field dari Challenges yang digunakan untuk join
-            foreignField: "_id", // Field dari Users yang digunakan untuk join
-            as: "User", // Nama property baru yang akan menampung data User
+            from: "Users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "User",
           },
         },
         {
           $unwind: {
-            // Mengubah array User menjadi objek
             path: "$User",
-            preserveNullAndEmptyArrays: true, // Menjaga agar dokumen tetap ada meskipun tidak ada User yang cocok
+            preserveNullAndEmptyArrays: true,
           },
         },
       ])
       .toArray();
 
-    // return challenges;
     return challenges.map((challenge) => ({
       _id: challenge._id,
       title: challenge.title,
@@ -166,15 +163,15 @@ export const getChallengesByFollowing = async (arrayOfIds: string[]) => {
       functionName: challenge.functionName,
       parameters: challenge.parameters,
       testCases: challenge.testCases,
-      author: challenge.User ? challenge.User.name : "Unknown", // Memastikan penulis terisi
+      author: challenge.User ? challenge.User.name : "Unknown",
+      authorUsername: challenge.User ? challenge.User.username : "Unknown",
     }));
   } catch (err) {
     console.error("Error fetching challenges:", err);
-    return []; // Kembalikan array kosong jika terjadi error
+    return [];
   }
 };
 
-// Contoh tipe untuk Challenge dan Solution
 interface Challenge {
   _id: string;
 }
@@ -183,14 +180,11 @@ interface Solution {
   challenge: Challenge;
 }
 
-// Ubah fungsi sesuai dengan tipe tersebut
 export const getNextChallengeId = async (_id: string) => {
   const db = await getDb();
 
-  // Asumsikan fungsi ini mengembalikan objek yang sesuai dengan tipe yang benar
   const fullProfile = await getProfileById(_id);
 
-  // Menambahkan tipe data untuk userSolutions
   const userSolutions: Solution[] | undefined = fullProfile?.userSolutions;
 
   const userChallengeSolutionsId = userSolutions?.map(

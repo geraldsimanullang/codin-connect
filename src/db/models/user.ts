@@ -61,13 +61,13 @@ export const searchUserByUsername = async (username: string) => {
         {
           name: {
             $regex: username,
-            $options: "i", // perbaikan di sini
+            $options: "i",
           },
         },
         {
           username: {
             $regex: username,
-            $options: "i", // perbaikan di sini
+            $options: "i",
           },
         },
       ],

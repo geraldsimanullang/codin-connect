@@ -42,7 +42,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       });
 
       if (response.ok) {
-        setIsFollowing((prev) => !prev); // Toggle following status
+        setIsFollowing((prev) => !prev);
         fetchProfile();
       } else {
         console.error("Failed to follow/unfollow user");

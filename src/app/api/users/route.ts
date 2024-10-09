@@ -9,7 +9,6 @@ type MyResponse<T> = {
   error?: string;
 };
 
-// Validasi input pendaftaran
 const userInputSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   username: z.string().min(1, { message: "Username is required" }),
@@ -23,13 +22,11 @@ const userInputSchema = z.object({
   password: z.string().min(5, { message: "Must be 5 or more characters long" }),
 });
 
-// Handler POST untuk registrasi user
 export const POST = async (request: Request) => {
   try {
     const data = await request.json();
     console.log("received data", data);
 
-    // Validasi input menggunakan zod
     const parseResult = userInputSchema.safeParse(data);
 
     if (!parseResult.success) {
@@ -46,7 +43,6 @@ export const POST = async (request: Request) => {
       );
     }
 
-    // Melakukan pendaftaran user
     const user = await doRegister(parseResult.data);
 
     return NextResponse.json<MyResponse<unknown>>(
@@ -70,7 +66,6 @@ export const POST = async (request: Request) => {
   }
 };
 
-// Handler GET untuk pencarian user berdasarkan username
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

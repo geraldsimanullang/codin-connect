@@ -116,16 +116,21 @@ export default function Solve() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center min-h-screen flex-col">
-          <Image
-            src="/loading.svg"
-            alt=""
-            width={100}
-            height={0}
-            style={{ height: "auto" }}
-          />
-          <p className=" font-semibold text-gray-700">Loading challenge...</p>
-        </div>
+        <>
+          <Navbar />
+          <div className="flex items-center justify-center min-h-screen flex-col">
+            <Image
+              src="/loading.svg"
+              alt=""
+              width={100}
+              height={0}
+              style={{ height: "auto" }}
+            />
+            <p className=" font-semibold text-gray-700">
+              Loading solver field...
+            </p>
+          </div>
+        </>
       )}
     </>
   );

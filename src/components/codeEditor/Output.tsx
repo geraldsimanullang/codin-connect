@@ -7,7 +7,7 @@ import { TestCaseModel } from "@/db/models/challenge";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-// const url = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const url = process.env.NEXT_PUBLIC_BASE_URL || "http:localhost:3000";
 
 interface OutputProps {
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor>;

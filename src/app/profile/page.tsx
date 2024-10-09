@@ -71,16 +71,21 @@ const Profile = () => {
 
   if (!profile)
     return (
-      <div className="flex items-center justify-center min-h-screen flex-col">
-        <Image
-          src="/loading.svg"
-          alt=""
-          width={100}
-          height={0}
-          style={{ height: "auto" }}
-        />
-        <p className=" font-semibold text-gray-700">Fetching your profile...</p>
-      </div>
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen flex-col">
+          <Image
+            src="/loading.svg"
+            alt=""
+            width={100}
+            height={0}
+            style={{ height: "auto" }}
+          />
+          <p className=" font-semibold text-gray-700">
+            Fetching your profile...
+          </p>
+        </div>
+      </>
     );
 
   return (

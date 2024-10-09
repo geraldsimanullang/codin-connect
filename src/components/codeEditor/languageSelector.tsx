@@ -41,7 +41,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 } hover:bg-slate-100`}
                 onClick={() => {
                   onSelect(lang);
-                  setIsOpen(false); // Close dropdown after selection
+                  setIsOpen(false);
                 }}
               >
                 <span>{lang}</span>
