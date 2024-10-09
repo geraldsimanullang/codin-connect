@@ -1,5 +1,5 @@
 import { getChallenges } from "@/db/models/challenge";
-import { readPayload } from "@/lib/jwt";
+// import { readPayload } from "@/lib/jwt";
 
 export const GET = async (request: Request) => {
   try {
@@ -17,18 +17,18 @@ export const GET = async (request: Request) => {
       });
     }
 
-    let decodedPayload;
-    try {
-      decodedPayload = readPayload(token);
-    } catch (error) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+    // let decodedPayload;
+    // try {
+    // decodedPayload = readPayload(token);
+
+    // } catch (error) {
+    //   return new Response(JSON.stringify({ error: "Invalid token" }), {
+    //     status: 401,
+    //     headers: { "Content-Type": "application/json" },
+    //   });
+    // }
 
     const challenges = await getChallenges();
-
 
     return new Response(JSON.stringify(challenges), {
       status: 200,

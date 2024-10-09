@@ -1,5 +1,5 @@
 import { doRegister, searchUserByUsername } from "@/db/models/user";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
 type MyResponse<T> = {

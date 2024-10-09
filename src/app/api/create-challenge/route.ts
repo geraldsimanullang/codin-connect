@@ -38,6 +38,7 @@ export const POST = async (request: Request) => {
     try {
       decodedPayload = readPayload(token);
     } catch (error) {
+      console.log(error);
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },

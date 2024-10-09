@@ -1,12 +1,18 @@
 "use client";
-import { Button } from "@nextui-org/react";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { slideInFromLeft, slideInFromRight } from "@/utils/motion";
 import { LuLaugh } from "react-icons/lu";
 import { handleRegister } from "./action";
-import { useSearchParams } from "next/navigation";
+
+interface TypeError {
+  name?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+}
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +22,7 @@ const Register = () => {
     password: "",
   });
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<TypeError>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -26,7 +32,7 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    const newErrors: any = {};
+    const newErrors: TypeError = {};
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.username) newErrors.username = "Username is required";
     if (!formData.email) newErrors.email = "Email is required";
