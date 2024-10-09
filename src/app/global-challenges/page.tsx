@@ -74,7 +74,8 @@ const ChallengeCard: React.FC = () => {
     <>
       <NavbarComponent />
       <div className="flex flex-col min-h-screen p-4 bg-gray-100">
-        <div className="flex justify-between items-center mb-4">
+        {/* Container untuk teks dan tombol, lebar sama dengan card */}
+        <div className="flex justify-between items-center mb-4 max-w-[1200px] w-full mx-auto px-4">
           <h1 className="text-2xl font-bold text-black">Global challenges</h1>
           <Link href="/create-challenge">
             <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
@@ -83,7 +84,8 @@ const ChallengeCard: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 w-[1200px] max-w-full mx-auto mt-2">
+        {/* Container untuk card, dengan lebar yang sama */}
+        <div className="grid grid-cols-1 gap-4 max-w-[1200px] w-full mx-auto mt-2 px-4">
           {challenges.map((challenge) => (
             <div
               key={challenge._id}
