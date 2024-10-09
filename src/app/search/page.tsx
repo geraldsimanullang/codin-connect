@@ -55,36 +55,41 @@ const SearchPage: React.FC = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-50">
-      <div className="p-4 max-w-xl w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">Search Results</h1>
-        {userData ? (
-          <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
-            {/* Avatar */}
-            <Image
-              src={"/default-avatar.jpg"}
-              alt={`${userData.username}'s avatar`}
-              width={80}
-              height={80}
-              className="rounded-full object-cover"
-            />
-            {/* User Info */}
-            <div className="text-center sm:text-left">
-              <p className="text-gray-800 text-lg font-semibold">
-                <Link href={`/profile/${userData.username}`}>
-                  <i>{userData.name}</i>
-                </Link>
-              </p>
-              <p className="text-gray-500 mt-1">
-                <Link href={`/profile/${userData.username}`}>
-                  @{userData.username}
-                </Link>
-              </p>
+    <div>
+      <NavbarComponent />
+      <div className="min-h-screen flex flex-col items-center bg-gray-50">
+        <div className="p-4 max-w-xl w-full">
+          <h1 className="text-2xl font-bold mb-6 text-center">
+            Search Results
+          </h1>
+          {userData ? (
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
+              {/* Avatar */}
+              <Image
+                src={"/default-avatar.jpg"}
+                alt={`${userData.username}'s avatar`}
+                width={80}
+                height={80}
+                className="rounded-full object-cover"
+              />
+              {/* User Info */}
+              <div className="text-center sm:text-left">
+                <p className="text-gray-800 text-lg font-semibold">
+                  <Link href={`/profile/${userData.username}`}>
+                    <i>{userData.name}</i>
+                  </Link>
+                </p>
+                <p className="text-gray-500 mt-1">
+                  <Link href={`/profile/${userData.username}`}>
+                    @{userData.username}
+                  </Link>
+                </p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center">No user found.</p>
-        )}
+          ) : (
+            <p className="text-gray-500 text-center">No user found.</p>
+          )}
+        </div>
       </div>
     </div>
   );
