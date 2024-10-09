@@ -42,33 +42,55 @@ const Output: React.FC<OutputProps> = ({
         const { input, expectedOutput } = testCases[i];
 
         let finalCode: string = "";
-        const inputArr = input.split(",");
+
+        const inputArr = input.match(
+          /\[.*?\]|\{.*?\}|\d+|"[^"]*"|'[^']*'|[^\s,]+/g
+        );
 
         if (language === "javascript") {
-          finalCode = `
-            ${sourceCode}
-            console.log(${functionName}(${inputArr
+          const inputValue = (inputArr || [])
             .map((input) => {
+              if (input.startsWith("[") && input.endsWith("]")) {
+                return input;
+              }
+
+              if (input.startsWith("{") && input.endsWith("}")) {
+                return input;
+              }
+
               if (isNaN(Number(input))) {
                 return `"${input}"`;
               }
-
               return Number(input);
             })
-            .toString()})); 
-          `;
+            .join(", ");
+
+          finalCode = `
+      ${sourceCode}
+      console.log(${functionName}(${inputValue}));
+    `;
         }
 
         if (language === "python") {
-          finalCode = `${sourceCode}\nprint(${functionName}(${inputArr
+          const inputValue = (inputArr || [])
             .map((input) => {
+              if (input.startsWith("[") && input.endsWith("]")) {
+                return input;
+              }
+
+              if (input.startsWith("{") && input.endsWith("}")) {
+                return input;
+              }
+
               if (isNaN(Number(input))) {
                 return `"${input}"`;
               }
 
               return Number(input);
             })
-            .toString()}));`;
+            .join(", ");
+
+          finalCode = `${sourceCode}\nprint(${functionName}(${inputValue}))`;
         }
 
         const { run: result } = await executeCode(language, finalCode);
