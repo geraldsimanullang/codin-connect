@@ -260,7 +260,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
                         <Link href={`/challenge/${challenge._id}`}>
                           <strong>{challenge.title}</strong>
                         </Link>
-                        <p>{challenge.description}</p>
+                        <p className="font-mono">{challenge.description}</p>
                       </div>
                     ))}
                   </ul>

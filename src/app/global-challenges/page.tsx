@@ -78,7 +78,7 @@ const ChallengeCard: React.FC = () => {
         <div className="flex justify-between items-center mb-4 max-w-[1200px] w-full mx-auto px-4">
           <h1 className="text-2xl font-bold text-black">Global challenges</h1>
           <Link href="/create-challenge">
-            <button className="bg-blue-500 text-white text-sm rounded px-4 py-2 shadow-md">
+            <button className="bg-blue-700 text-white text-sm rounded px-4 py-2 shadow-md">
               Add Challenge
             </button>
           </Link>
@@ -99,7 +99,9 @@ const ChallengeCard: React.FC = () => {
               <div className="text-sm text-gray-600 mb-2">
                 <strong>{challenge.author?.name || "Unknown"}</strong>
               </div>
-              <p className="text-gray-700 mb-4">{challenge.description}</p>
+              <p className="text-gray-700 mb-4 font-mono">
+                {challenge.description}
+              </p>
             </div>
           ))}
         </div>
